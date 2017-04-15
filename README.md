@@ -11,3 +11,9 @@
 ### Build from source
 ` git clone https://github.com/Syncurity/irflow-sdk-python`
 *`pip install -e .`
+
+### Contribute
+Pull requests are always appreciated
+
+### Support
+Please open an issue in github
