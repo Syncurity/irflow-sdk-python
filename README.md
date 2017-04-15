@@ -1,5 +1,9 @@
+![PyPI](https://img.shields.io/badge/python-2.7-brightgreen.svg)
+![PyPI](https://img.shields.io/badge/pypi-1.0.4-blue.svg)
+
 # irflow-sdk-python
 
-## Sourcecode for the python irflow_client python SDK
+## A python client for Syncurity IR-Flow REST API
 
-to install locally, run 
+### Installation
+`pip install irflow_client`
