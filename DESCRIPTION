@@ -1,2 +1,1 @@
-irflow_client is a python client which wraps up Syncurity IR-Flow's API into a format so that you can write scripts
-against the API without having to build all the API connection and endpoint logic
+A python client for Syncurity IR-Flow
