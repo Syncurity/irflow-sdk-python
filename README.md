@@ -1,5 +1,5 @@
 ![PyPI](https://img.shields.io/badge/python-2.7-brightgreen.svg)
-![PyPI](https://img.shields.io/badge/pypi-1.0.4-blue.svg)
+![PyPI](https://img.shields.io/badge/pypi-1.0.5-blue.svg)
 
 # irflow-sdk-python
 
@@ -17,3 +17,7 @@ Pull requests are always appreciated
 
 ### Support
 Please open an issue in github
+
+### Examples
+To get started with examples, read the README in the examples directory.  It includes two sample python scripts that use the
+irflow_client.
