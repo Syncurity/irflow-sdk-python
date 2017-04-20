@@ -8,6 +8,9 @@
 ### Installation
 `pip install irflow_client`
 
+### Upgrade ###
+`pip install irflow_client --upgrade`
+
 ### Build from source
 ` git clone https://github.com/Syncurity/irflow-sdk-python`  
 `pip install -e .`
