@@ -20,8 +20,8 @@ setup(
     packages=['irflow_client'],
     install_requires=base_requirements,
     classifiers=[
-        'Development Status :: 4 - Beta'
-        'Intended Audience :: Developers Security Analysts',
+        'Development Status :: 4 - Beta',
+        'Intended Audience :: Developers',
         'Topic :: Security',
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.6',
