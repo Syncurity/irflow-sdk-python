@@ -22,9 +22,71 @@ class IRFlowClient(object):
         'put_alert_close': 'api/v1/alerts/close',
     }
 
-    def __init__(self, config_file):
+    def __init__(self, config_args=None, config_file=None):
         # Create a PrettyPrint object so we can dump JSon structures if debug = true.
         self.pp = pprint.PrettyPrinter(indent=4)
+
+        # Make sure we have config info we need
+        if not ( config_args or config_file ):
+            print('Missing config input parameters. Need either api.conf, or to pass in config_args to'
+                  'initialize IRFlowClient Class \n'
+                  '')
+        if config_args and config_file:
+            print('!!! Warning !!! Since you provided both input args and an api.conf file, we are'
+                  'defaulting to the input args.')
+
+        # parse config_args dict
+        if config_args:
+            self._get_config_args_params(config_args)
+
+        # Else parse api.conf
+        elif config_file:
+            self._get_config_file_params(config_file)
+
+        # Get a reusable session object.
+        self.session = requests.Session()
+        # Set the X-Authorization header for all calls through the API
+        # The rest of the headers are specified by the individual calls.
+        self.session.headers.update({'X-Authorization': '{} {}'.format(self.api_user, self.api_key)})
+
+    def _get_config_args_params(self, config_args):
+        ''' gets args to setup a client connection
+        
+        Args:
+            config_args (dict):
+                Required:
+                    "address":"IR-Flow Server FQDN or IP Address"
+                    "api_user":"IR-Flow API User"
+                    "api_key":"above user's api key"
+                Optional
+                    "protocol":"https unless otherwise specified"
+                    "debug":"enable debug output, default = None"
+                    "verbose":"turn up the verbosity"
+        '''
+
+        # Missing config checks done before class initializes in argparse
+
+        self.address = config_args['address']
+        self.api_user = config_args['api_user']
+        self.api_key = config_args['api_key']
+        if config_args['protocol']:
+            self.protocol = config_args['protocol']
+        else:
+            self.protocol = 'https'
+        if config_args['debug']:
+            self.debug = config_args['debug']
+        else:
+            self.debug = False
+        if config_args['verbose_level']:
+            self.verbose = int(config_args['verbose_level'])
+        else:
+            self.verbose = 1
+
+        # Dump Configuration if --debug
+        if self.debug:
+            self.dump_settings()
+
+    def _get_config_file_params(self, config_file):
 
         config = ConfigParser.ConfigParser()
         config.read(config_file)
@@ -48,7 +110,7 @@ class IRFlowClient(object):
             missing_config = True
         if not config.has_option('IRFlowAPI', 'api_key'):
             print(
-                'Configuration File "%s" does not contain the "api_user" option in the [IRFlowAPI] section'
+                'Configuration File "%s" does not contain the "api_key" option in the [IRFlowAPI] section'
                 % config_file)
             missing_config = True
 
@@ -76,12 +138,7 @@ class IRFlowClient(object):
         else:
             self.verbose = 1
 
-        # Get a reusable session object.
-        self.session = requests.Session()
-        # Set the X-Authorization header for all calls through the API
-        # The rest of the headers are specified by the individual calls.
-        self.session.headers.update({'X-Authorization': '{} {}'.format(self.api_user, self.api_key)})
-
+        # Dump Configuration if --debug
         if self.debug:
             self.dump_settings()
 
