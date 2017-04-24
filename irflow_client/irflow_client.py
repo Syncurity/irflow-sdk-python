@@ -27,7 +27,7 @@ class IRFlowClient(object):
         self.pp = pprint.PrettyPrinter(indent=4)
 
         # Make sure we have config info we need
-        if not config_args or config_file:
+        if not ( config_args or config_file ):
             print('Missing config input parameters. Need either api.conf, or to pass in config_args to'
                   'initialize IRFlowClient Class \n'
                   '')
@@ -110,7 +110,7 @@ class IRFlowClient(object):
             missing_config = True
         if not config.has_option('IRFlowAPI', 'api_key'):
             print(
-                'Configuration File "%s" does not contain the "api_user" option in the [IRFlowAPI] section'
+                'Configuration File "%s" does not contain the "api_key" option in the [IRFlowAPI] section'
                 % config_file)
             missing_config = True
 
