@@ -50,6 +50,19 @@ class IRFlowClient(object):
         self.session.headers.update({'X-Authorization': '{} {}'.format(self.api_user, self.api_key)})
 
     def _get_config_args_params(self, config_args):
+        ''' gets args to setup a client connection
+        
+        Args:
+            config_args (dict):
+                Required:
+                    "address":"IR-Flow Server FQDN or IP Address"
+                    "api_user":"IR-Flow API User"
+                    "api_key":"above user's api key"
+                Optional
+                    "protocol":"https unless otherwise specified"
+                    "debug":"enable debug output, default = None"
+                    "verbose":"turn up the verbosity"
+        '''
 
         # Missing config checks done before class initializes in argparse
 
