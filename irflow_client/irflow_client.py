@@ -15,11 +15,16 @@ class IRFlowClient(object):
     end_points = {
         'create_alert': 'api/v1/alerts',
         'get_alert': 'api/v1/alerts',
+        'put_alert_close': 'api/v1/alerts/close',
+        'put_incident_on_alert': 'api/v1/alerts/%s/incident/%s',
         'get_attachment': 'api/v1/attachments/%s/download',
         'put_attachment': 'api/v1/%s/%s/attachments',
         'get_fact_group': 'api/v1/fact_groups',
         'put_fact_group': 'api/v1/fact_groups',
-        'put_alert_close': 'api/v1/alerts/close',
+        'create_incident': 'api/v1/incidents',
+        'get_incident': 'api/v1/incidents/%s',
+        'put_incident': 'api/v1/incidents/%s',
+        'put_alert_on_incident': 'api/v1/incidents/%s/alerts/%s',
     }
 
     def __init__(self, config_args=None, config_file=None):
@@ -152,9 +157,9 @@ class IRFlowClient(object):
         print ('\tDebug: "%s"' % self.debug)
         print('\tVerbose: "%s"' % self.verbose)
 
-    def close_alert(self, alert_id, close_reason):
+    def close_alert(self, alert_num, close_reason):
         url = '%s://%s/%s' % (self.protocol, self.address, self.end_points['put_alert_close'])
-        data = {"alert_num": "%s" % alert_id, "close_reason_name": "%s" % close_reason}
+        data = {"alert_num": "%s" % alert_num, "close_reason_name": "%s" % close_reason}
         headers = {'Content-type': 'application/json'}
 
         if self.debug:
@@ -175,9 +180,31 @@ class IRFlowClient(object):
                 self.pp.pprint(response.json())
         return response.json()
 
-    def upload_attachment_to_alert(self, alert_id, filename):
+    def attach_incident_to_alert(self, incident_num, alert_num):
+        url = '%s://%s/%s' % (self.protocol, self.address, self.end_points['put_incident_on_alert'])
+        url = url % (alert_num, incident_num)
+        headers = {'Content-type': 'application/json'}
+
+        if self.debug:
+            print('========== Attach Incident to Alert ==========')
+            print ('URL: "%s"' % url)
+            print ('Session Headers: "%s"' % self.session.headers)
+            print ('Headers: "%s"' % headers)
+
+        response = self.session.put(url, json=data, headers=headers, verify=False)
+
+        if self.debug:
+            if self.verbose > 0:
+                print('========== Attach Incident to Alert Response ==========')
+                print ('HTTP Status: "%s"' % response.status_code)
+            if self.verbose > 1:
+                print ('Response Json:')
+                self.pp.pprint(response.json())
+        return response.json()
+
+    def upload_attachment_to_alert(self, alert_num, filename):
         url = '%s://%s/%s' % (self.protocol, self.address, self.end_points['put_attachment'])
-        url = url % ('alerts', alert_id)
+        url = url % ('alerts', alert_num)
         data = {'file': open(filename, 'rb')}
         headers = {}
 
@@ -352,7 +379,7 @@ class IRFlowClient(object):
             'Accept': 'application/json'
         }
         if self.debug:
-            print ('========== GetAlert ==========')
+            print ('========== Get Alert ==========')
             print ('URL: "%s"' % url)
             print ('Params: ""')
             print ('Session Headers: "%s"' % self.session.headers)
@@ -386,13 +413,13 @@ class IRFlowClient(object):
             params['data_field_group_name'] = incoming_field_group_name
 
         if self.debug:
-            print ('========== CreateAlert ==========')
+            print ('========== Create Alert ==========')
             print ('URL: "%s"' % url)
             print ('Params: %s' % params)
             print ('Session Headers: "%s"' % self.session.headers)
             print ('Headers: "%s"' % headers)
 
-        response = self.session.post(url, params=params, verify=False, headers=headers)
+        response = self.session.post(url, json=params, verify=False, headers=headers)
 
         if self.debug:
             if self.verbose > 0:
@@ -402,6 +429,124 @@ class IRFlowClient(object):
                 print ('Response Json:')
                 self.pp.pprint(response.json())
 
+        return response.json()
+
+    def create_incident(self, incident_fields, incident_type_name, incident_subtype_name=None, description=None):
+        url = '%s://%s/%s' % (self.protocol, self.address, self.end_points['create_incident'])
+        params = {
+            'fields': incident_fields,
+            'incident_type_name': incident_type_name,
+        }
+        headers = {
+            'Content-type': 'application/json',
+            'Accept': 'application/json'
+        }
+
+        if incoming_field_group_name is not None:
+            params['incident_subtype_name'] = incident_subtype_name
+        if description is not None:
+            params['description'] = description
+
+        if self.debug:
+            print ('========== Create Incident ==========')
+            print ('URL: "%s"' % url)
+            print ('Params: %s' % params)
+            print ('Session Headers: "%s"' % self.session.headers)
+            print ('Headers: "%s"' % headers)
+
+        response = self.session.post(url, json=params, verify=False, headers=headers)
+
+        if self.debug:
+            if self.verbose > 0:
+                print('========== Response ==========')
+                print ('HTTP Status: "%s"' % response.status_code)
+            if self.verbose > 1:
+                print ('Response Json:')
+                self.pp.pprint(response.json())
+
+        return response.json()
+
+    def get_incident(self, incident_num):
+        url = '%s://%s/%s' % (self.protocol, self.address, self.end_points['get_incident'])
+        url = url % incident_num
+        headers = {
+            'Content-type': 'application/json',
+            'Accept': 'application/json'
+        }
+        if self.debug:
+            print ('========== Get Incident ==========')
+            print ('URL: "%s"' % url)
+            print ('Session Headers: "%s"' % self.session.headers)
+            print ('Headers: "%s"' % headers)
+
+        response = self.session.get(url, verify=False, headers=headers)
+
+        if self.debug:
+            if self.verbose > 0:
+                print('========== Response ==========')
+                print ('HTTP Status: "%s"' % response.status_code)
+            if self.verbose > 1:
+                print ('Response Json:')
+                self.pp.pprint(response.json())
+
+        return response.json()
+
+    def update_incident(self, incident_num, incident_fields, incident_type_name, incident_subtype_name=None, description=None):
+        url = '%s://%s/%s' % (self.protocol, self.address, self.end_points['put_incident'])
+        url = url % incident_num
+        params = {
+            'fields': incident_fields,
+            'incident_type_name': incident_type_name,
+        }
+        headers = {
+            'Content-type': 'application/json',
+            'Accept': 'application/json'
+        }
+
+        if incoming_field_group_name is not None:
+            params['incident_subtype_name'] = incident_subtype_name
+        if description is not None:
+            params['description'] = description
+
+        if self.debug:
+            print ('========== Update Incident ==========')
+            print ('URL: "%s"' % url)
+            print ('Params: %s' % params)
+            print ('Session Headers: "%s"' % self.session.headers)
+            print ('Headers: "%s"' % headers)
+
+        response = self.session.post(url, json=params, verify=False, headers=headers)
+
+        if self.debug:
+            if self.verbose > 0:
+                print('========== Response ==========')
+                print ('HTTP Status: "%s"' % response.status_code)
+            if self.verbose > 1:
+                print ('Response Json:')
+                self.pp.pprint(response.json())
+
+        return response.json()
+
+    def attach_alert_to_incident(self, alert_num, incident_num):
+        url = '%s://%s/%s' % (self.protocol, self.address, self.end_points['put_alert_on_incident'])
+        url = url % (incident_num, alert_num)
+        headers = {'Content-type': 'application/json'}
+
+        if self.debug:
+            print('========== Attach Alert to Incident ==========')
+            print ('URL: "%s"' % url)
+            print ('Session Headers: "%s"' % self.session.headers)
+            print ('Headers: "%s"' % headers)
+
+        response = self.session.put(url, json=data, headers=headers, verify=False)
+
+        if self.debug:
+            if self.verbose > 0:
+                print('========== Attach Alert Response ==========')
+                print ('HTTP Status: "%s"' % response.status_code)
+            if self.verbose > 1:
+                print ('Response Json:')
+                self.pp.pprint(response.json())
         return response.json()
 
     # The following helper functions are also defined in the irflow_client
