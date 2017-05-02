@@ -13,10 +13,10 @@ requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 class IRFlowClient(object):
     end_points = {
-        'create_alert': 'api/v1/alerts.json',
+        'create_alert': 'api/v1/alerts',
         'get_alert': 'api/v1/alerts',
         'get_attachment': 'api/v1/attachments/%s/download',
-        'put_attachment': 'api/v1/alerts/%s/attachments',
+        'put_attachment': 'api/v1/%s/%s/attachments',
         'get_fact_group': 'api/v1/fact_groups',
         'put_fact_group': 'api/v1/fact_groups',
         'put_alert_close': 'api/v1/alerts/close',
@@ -177,7 +177,55 @@ class IRFlowClient(object):
 
     def upload_attachment_to_alert(self, alert_id, filename):
         url = '%s://%s/%s' % (self.protocol, self.address, self.end_points['put_attachment'])
-        url = url % alert_id
+        url = url % ('alerts', alert_id)
+        data = {'file': open(filename, 'rb')}
+        headers = {}
+
+        if self.debug:
+            print ('========== Upload Attachment to Alert ==========')
+            print ('URL: "%s"' % url)
+            print ('Session Headers: "%s"' % self.session.headers)
+            print ('Headers: "%s"' % headers)
+
+        response = self.session.post(url, data={}, files=data, headers=headers, verify=False)
+
+        if self.debug:
+            if self.verbose > 0:
+                print('========== Response ==========')
+                print ('HTTP Status: "%s"' % response.status_code)
+            if self.verbose > 1:
+                print ('Response Json:')
+                self.pp.pprint(response.json())
+
+        return response.json()
+
+    def upload_attachment_to_incident(self, incident_id, filename):
+        url = '%s://%s/%s' % (self.protocol, self.address, self.end_points['put_attachment'])
+        url = url % ('incidents', incident_id)
+        data = {'file': open(filename, 'rb')}
+        headers = {}
+
+        if self.debug:
+            print ('========== Upload Attachment to Incident ==========')
+            print ('URL: "%s"' % url)
+            print ('Session Headers: "%s"' % self.session.headers)
+            print ('Headers: "%s"' % headers)
+
+        response = self.session.post(url, data={}, files=data, headers=headers, verify=False)
+
+        if self.debug:
+            if self.verbose > 0:
+                print('========== Response ==========')
+                print ('HTTP Status: "%s"' % response.status_code)
+            if self.verbose > 1:
+                print ('Response Json:')
+                self.pp.pprint(response.json())
+
+        return response.json()
+
+    def upload_attachment_to_task(self, task_id, filename):
+        url = '%s://%s/%s' % (self.protocol, self.address, self.end_points['put_attachment'])
+        url = url % ('tasks', task_id)
         data = {'file': open(filename, 'rb')}
         headers = {}
 
@@ -322,10 +370,10 @@ class IRFlowClient(object):
 
         return response.json()
 
-    def create_alert(self, alert_fields, description=None, incoming_field_group_name=None, alert_type_name=None):
+    def create_alert(self, alert_fields, description=None, incoming_field_group_name=None):
         url = '%s://%s/%s' % (self.protocol, self.address, self.end_points['create_alert'])
         params = {
-            'text': dumps(alert_fields),
+            'fields': alert_fields,
         }
         headers = {
             'Content-type': 'application/json',
@@ -336,8 +384,6 @@ class IRFlowClient(object):
             params['description'] = description
         if incoming_field_group_name is not None:
             params['data_field_group_name'] = incoming_field_group_name
-        elif alert_type_name is not None:
-            params['alert_type_name'] = alert_type_name
 
         if self.debug:
             print ('========== CreateAlert ==========')
