@@ -138,8 +138,8 @@ class IRFlowClient(object):
             self.debug = config.getboolean('IRFlowAPI', 'debug')
         else:
             self.debug = False
-        if config.has_option('IRFlowAPI', 'verbose_level'):
-            self.verbose = int(config.get('IRFlowAPI', 'verbose_level'))
+        if config.has_option('IRFlowAPI', 'verbose'):
+            self.verbose = int(config.get('IRFlowAPI', 'verbose'))
         else:
             self.verbose = 1
 
@@ -442,7 +442,7 @@ class IRFlowClient(object):
             'Accept': 'application/json'
         }
 
-        if incoming_field_group_name is not None:
+        if incident_subtype_name is not None:
             params['incident_subtype_name'] = incident_subtype_name
         if description is not None:
             params['description'] = description
@@ -503,7 +503,7 @@ class IRFlowClient(object):
             'Accept': 'application/json'
         }
 
-        if incoming_field_group_name is not None:
+        if incident_subtype_name is not None:
             params['incident_subtype_name'] = incident_subtype_name
         if description is not None:
             params['description'] = description
@@ -515,7 +515,7 @@ class IRFlowClient(object):
             print ('Session Headers: "%s"' % self.session.headers)
             print ('Headers: "%s"' % headers)
 
-        response = self.session.post(url, json=params, verify=False, headers=headers)
+        response = self.session.put(url, json=params, verify=False, headers=headers)
 
         if self.debug:
             if self.verbose > 0:
@@ -538,7 +538,7 @@ class IRFlowClient(object):
             print ('Session Headers: "%s"' % self.session.headers)
             print ('Headers: "%s"' % headers)
 
-        response = self.session.put(url, json=data, headers=headers, verify=False)
+        response = self.session.put(url, headers=headers, verify=False)
 
         if self.debug:
             if self.verbose > 0:
