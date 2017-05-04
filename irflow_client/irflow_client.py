@@ -25,6 +25,14 @@ class IRFlowClient(object):
         'get_incident': 'api/v1/incidents/%s',
         'put_incident': 'api/v1/incidents/%s',
         'put_alert_on_incident': 'api/v1/incidents/%s/alerts/%s',
+        'get_picklist_list': 'api/v1/picklists',
+        'get_picklist': 'api/v1/picklists/%s',
+        'add_item_to_picklist': 'api/v1/picklists/%s/picklist_items',
+        'get_picklist_item_list': 'api/v1/picklist_items',
+        'create_picklist_item': 'api/v1/picklist_items',
+        'get_picklist_item': 'api/v1/picklist_items/%s',
+        'restore_picklist_item': 'api/v1/picklist_items/%s/restore',
+        'delete_picklist_item': 'api/v1/picklist_items/%s',
     }
 
     def __init__(self, config_args=None, config_file=None):
@@ -547,6 +555,231 @@ class IRFlowClient(object):
             if self.verbose > 1:
                 print ('Response Json:')
                 self.pp.pprint(response.json())
+        return response.json()
+
+    def list_picklists(self, with_trashed=False, only_trashed=False):
+        url = '%s://%s/%s' % (self.protocol, self.address, self.end_points['get_picklist_list'])
+        params = {
+            'with_trashed': with_trashed,
+            'only_trashed': only_trashed,
+        }
+        headers = {
+            'Content-type': 'application/json',
+            'Accept': 'application/json'
+        }
+        if self.debug:
+            print ('========== Get List of Picklists ==========')
+            print ('URL: "%s"' % url)
+            print ('Session Headers: "%s"' % self.session.headers)
+            print ('Headers: "%s"' % headers)
+
+        response = self.session.get(url, params=params, verify=False, headers=headers)
+
+        if self.debug:
+            if self.verbose > 0:
+                print('========== Response ==========')
+                print ('HTTP Status: "%s"' % response.status_code)
+            if self.verbose > 1:
+                print ('Response Json:')
+                self.pp.pprint(response.json())
+
+        return response.json()
+
+    def get_picklist(self, picklist_id):
+        url = '%s://%s/%s' % (self.protocol, self.address, self.end_points['get_picklist'])
+        url = url % picklist_id
+        headers = {
+            'Content-type': 'application/json',
+            'Accept': 'application/json'
+        }
+        if self.debug:
+            print ('========== Get Picklist ==========')
+            print ('URL: "%s"' % url)
+            print ('Session Headers: "%s"' % self.session.headers)
+            print ('Headers: "%s"' % headers)
+
+        response = self.session.get(url, verify=False, headers=headers)
+
+        if self.debug:
+            if self.verbose > 0:
+                print('========== Response ==========')
+                print ('HTTP Status: "%s"' % response.status_code)
+            if self.verbose > 1:
+                print ('Response Json:')
+                self.pp.pprint(response.json())
+
+        return response.json()
+
+    def add_item_to_picklist(self, picklist_id, value, label, description=None):
+        url = '%s://%s/%s' % (self.protocol, self.address, self.end_points['add_item_to_picklist'])
+        url = url % picklist_id
+        params = {
+            'value': value,
+            'label': label,
+        }
+        headers = {
+            'Content-type': 'application/json',
+            'Accept': 'application/json'
+        }
+
+        if description is not None:
+            params['description'] = description
+
+        if self.debug:
+            print ('========== Add Item to Picklist ==========')
+            print ('URL: "%s"' % url)
+            print ('Params: %s' % params)
+            print ('Session Headers: "%s"' % self.session.headers)
+            print ('Headers: "%s"' % headers)
+
+        response = self.session.post(url, json=params, verify=False, headers=headers)
+
+        if self.debug:
+            if self.verbose > 0:
+                print('========== Response ==========')
+                print ('HTTP Status: "%s"' % response.status_code)
+            if self.verbose > 1:
+                print ('Response Json:')
+                self.pp.pprint(response.json())
+
+        return response.json()
+
+    def list_picklist_items(self, picklist_id, with_trashed=False, only_trashed=False):
+        url = '%s://%s/%s' % (self.protocol, self.address, self.end_points['get_picklist_item_list'])
+        params = {
+            'picklist_id': picklist_id,
+            'with_trashed': with_trashed,
+            'only_trashed': only_trashed,
+        }
+        headers = {
+            'Content-type': 'application/json',
+            'Accept': 'application/json'
+        }
+        if self.debug:
+            print ('========== Get List of Picklist Items ==========')
+            print ('URL: "%s"' % url)
+            print ('Session Headers: "%s"' % self.session.headers)
+            print ('Headers: "%s"' % headers)
+
+        response = self.session.get(url, params=params, verify=False, headers=headers)
+
+        if self.debug:
+            if self.verbose > 0:
+                print('========== Response ==========')
+                print ('HTTP Status: "%s"' % response.status_code)
+            if self.verbose > 1:
+                print ('Response Json:')
+                self.pp.pprint(response.json())
+
+        return response.json()
+
+    def create_picklist_item(self, picklist_id, value, label, description=None):
+        url = '%s://%s/%s' % (self.protocol, self.address, self.end_points['create_picklist_item'])
+        params = {
+            'picklist_id': picklist_id,
+            'value': value,
+            'label': label,
+        }
+        headers = {
+            'Content-type': 'application/json',
+            'Accept': 'application/json'
+        }
+
+        if description is not None:
+            params['description'] = description
+
+        if self.debug:
+            print ('========== Add Picklist Item ==========')
+            print ('URL: "%s"' % url)
+            print ('Params: %s' % params)
+            print ('Session Headers: "%s"' % self.session.headers)
+            print ('Headers: "%s"' % headers)
+
+        response = self.session.post(url, json=params, verify=False, headers=headers)
+
+        if self.debug:
+            if self.verbose > 0:
+                print('========== Response ==========')
+                print ('HTTP Status: "%s"' % response.status_code)
+            if self.verbose > 1:
+                print ('Response Json:')
+                self.pp.pprint(response.json())
+
+        return response.json()
+
+    def get_picklist_item(self, picklist_item_id):
+        url = '%s://%s/%s' % (self.protocol, self.address, self.end_points['get_picklist_item'])
+        url = url % picklist_item_id
+        headers = {
+            'Content-type': 'application/json',
+            'Accept': 'application/json'
+        }
+        if self.debug:
+            print ('========== Get Picklist Item ==========')
+            print ('URL: "%s"' % url)
+            print ('Session Headers: "%s"' % self.session.headers)
+            print ('Headers: "%s"' % headers)
+
+        response = self.session.get(url, verify=False, headers=headers)
+
+        if self.debug:
+            if self.verbose > 0:
+                print('========== Response ==========')
+                print ('HTTP Status: "%s"' % response.status_code)
+            if self.verbose > 1:
+                print ('Response Json:')
+                self.pp.pprint(response.json())
+
+        return response.json()
+
+    def restore_picklist_item(self, picklist_item_id):
+        url = '%s://%s/%s' % (self.protocol, self.address, self.end_points['restore_picklist_item'])
+        url = url % picklist_item_id
+        headers = {
+            'Content-type': 'application/json',
+            'Accept': 'application/json'
+        }
+        if self.debug:
+            print ('========== Restore Picklist Item ==========')
+            print ('URL: "%s"' % url)
+            print ('Session Headers: "%s"' % self.session.headers)
+            print ('Headers: "%s"' % headers)
+
+        response = self.session.put(url, verify=False, headers=headers)
+
+        if self.debug:
+            if self.verbose > 0:
+                print('========== Response ==========')
+                print ('HTTP Status: "%s"' % response.status_code)
+            if self.verbose > 1:
+                print ('Response Json:')
+                self.pp.pprint(response.json())
+
+        return response.json()
+
+    def delete_picklist_item(self, picklist_item_id):
+        url = '%s://%s/%s' % (self.protocol, self.address, self.end_points['delete_picklist_item'])
+        url = url % picklist_item_id
+        headers = {
+            'Content-type': 'application/json',
+            'Accept': 'application/json'
+        }
+        if self.debug:
+            print ('========== Delete Picklist Item ==========')
+            print ('URL: "%s"' % url)
+            print ('Session Headers: "%s"' % self.session.headers)
+            print ('Headers: "%s"' % headers)
+
+        response = self.session.delete(url, verify=False, headers=headers)
+
+        if self.debug:
+            if self.verbose > 0:
+                print('========== Response ==========')
+                print ('HTTP Status: "%s"' % response.status_code)
+            if self.verbose > 1:
+                print ('Response Json:')
+                self.pp.pprint(response.json())
+
         return response.json()
 
     # The following helper functions are also defined in the irflow_client

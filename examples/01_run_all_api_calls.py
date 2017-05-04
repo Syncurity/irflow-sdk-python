@@ -7,6 +7,9 @@ import uuid
 # library used to generate a datetime
 import datetime
 
+# library to used print json in a readable format
+import pprint
+
 # The first thing any script does is instantiate the irflow_api client library.
 # NOTE: We pass the configuration file to the library when we instatiate it.
 # The configuration file specifies the
@@ -43,7 +46,7 @@ print ('========== Get Alert ==========')
 # then grab its create_at value and print it.
 new_alert = irflowAPI.get_alert(alert_num)
 
-if alert_data['success']:
+if new_alert['success']:
     print "Get Alert: Success"
     print 'Alert_Num: ' + str(new_alert['data']['alert']['alert_num'])
     # Grab the created_at field
@@ -211,3 +214,96 @@ if upload_result['success']:
     print "Upload Attachment to Incident: Success"
 else:
     print "Upload Attachment to Incident: Failed"
+
+
+def test_picklist_apis(found_picklist):
+    picklist_id = found_picklist['id']
+
+    # Get the Picklist the was just found
+    print ('========== Get Picklist ==========')
+    picklist_data = irflowAPI.get_picklist(picklist_id)
+
+    if picklist_data['success']:
+        print "Get Picklist: Success"
+        print 'Picklist: ' + str(picklist_data['data']['picklist']['name'])
+    else:
+        print "Get Picklist: Failed"
+
+    # Add an item to the Picklist
+    print ('========== Add Item to Picklist ==========')
+    add_item_result = irflowAPI.add_item_to_picklist(picklist_id, 'example_value', 'Example Label')
+
+    if add_item_result['success']:
+        picklist_item_id = add_item_result['data']['picklist_item']['id']
+        print "Add Item to Picklist: Success"
+        print 'Picklist Item ID: ' + str(picklist_item_id)
+    else:
+        print "Add Item to Picklist: Failed"
+
+    # Get the Picklist Item that was just created
+    print ('========== Get Picklist Item ==========')
+    picklist_item_data = irflowAPI.get_picklist_item(picklist_item_id)
+
+    if picklist_item_data['success']:
+        print "Get Picklist Item: Success"
+        print 'Picklist Item: ' + str(picklist_item_data['data']['picklist_item']['label'])
+    else:
+        print "Get Picklist Item: Failed"
+
+    # Delete the Picklist Item that was just created
+    print ('========== Delete Picklist Item ==========')
+    delete_item_result = irflowAPI.delete_picklist_item(picklist_item_id)
+
+    if delete_item_result['success']:
+        print "Delete Picklist Item: Success"
+    else:
+        print "Delete Picklist Item: Failed"
+
+    # Create a duplicate Picklist Item with this picklist_id
+    print ('========== Create Picklist Item ==========')
+    create_item_result = irflowAPI.create_picklist_item(picklist_id, 'example_value', 'Example Label')
+
+    if create_item_result['success']:
+        print "Add Item to Picklist: Succeeded unexpected. Something went wrong."
+    else:
+        print "Add Item to Picklist: Failed as expected. Can't add a duplicate picklist item."
+
+    # Get a list of the deleted picklists
+    print ('========== List of Deleted Picklist Items ==========')
+    list_deleted_result = irflowAPI.list_picklist_items(picklist_id, only_trashed=True)
+
+    if list_deleted_result['success']:
+        print "List Picklist Items: Success"
+    else:
+        print "List Picklist Items: Failed"
+
+    # Restore the Picklist Item that was just deleted
+    print ('========== Restore Picklist Item ==========')
+    restore_item_result = irflowAPI.restore_picklist_item(picklist_item_id)
+
+    if restore_item_result['success']:
+        print "Restore Picklist Item: Success"
+    else:
+        print "Restore Picklist Item: Failed"
+
+
+print ('========== Get List of Picklists ==========')
+picklists_result = irflowAPI.list_picklists()
+
+if picklists_result['success']:
+    print "List Picklists: Success"
+else:
+    print "List Picklists: Failed"
+
+# Check if any picklists were found
+if 'picklists' in picklists_result['data']:
+    # Find the picklist with the name "New Picklist"
+    picklist_name = 'New Picklist'
+    found_picklist = False
+    for picklist in picklists_result['data']['picklists']:
+        if picklist['name'] == picklist_name:
+            found_picklist = picklist
+            break # Break the loop once the picklist is found
+
+if found_picklist:
+    test_picklist_apis(found_picklist)
