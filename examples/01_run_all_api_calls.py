@@ -141,7 +141,7 @@ else:
 print ('========== Create Incident ==========')
 # Create an Incident using the API
 # First set-up the Incident data we want to use to create this Incident with.
-incident_fields = {'time_contained': datetime.datetime.now().strftime("%d/%m/%y %H:%M:%S")}
+incident_fields = {'time_contained': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
 description = 'Super Bad API Incident'  # The Alert Description
 # Note this matches the Incident Type name in IR Flow.
 # You will get an error if this Incident Type does not exist in IR Flow.
@@ -192,7 +192,7 @@ else:
 print ('========== Update Incident ==========')
 # Update an Incident using the API
 # Update set-up the Incident data we want to use to update this Incident.
-incident_fields = {'time_remediated': datetime.datetime.now().strftime("%d/%m/%y %H:%M:%S")}
+incident_fields = {'time_remediated': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
 description = 'Super Bad API Incident - Remediated'  # The Alert Description
 # Call the irflow_api method to update an Incident.
 # NOTE: irflowAPI is the object we created from the irflow_client.  This is how all methods are called.
