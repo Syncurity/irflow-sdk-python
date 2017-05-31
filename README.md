@@ -1,4 +1,5 @@
 ![PyPI](https://img.shields.io/badge/python-2.7-brightgreen.svg)
+![PyPI](https://img.shields.io/badge/python-3.6-brightgreen.svg)
 ![PyPI](https://img.shields.io/badge/pypi-1.1.0-blue.svg)
 
 # irflow-sdk-python
