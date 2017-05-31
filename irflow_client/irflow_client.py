@@ -1,4 +1,4 @@
-import ConfigParser
+import configparser
 from json import dumps
 import pprint
 import requests
@@ -40,10 +40,10 @@ class IRFlowClient(object):
         self.pp = pprint.PrettyPrinter(indent=4)
 
         # Make sure we have config info we need
-        if not ( config_args or config_file ):
+        if not (config_args or config_file):
             print('Missing config input parameters. Need either api.conf, or to pass in config_args to'
                   'initialize IRFlowClient Class \n'
-                  '')
+                  )
         if config_args and config_file:
             print('!!! Warning !!! Since you provided both input args and an api.conf file, we are'
                   'defaulting to the input args.')
@@ -63,7 +63,7 @@ class IRFlowClient(object):
         self.session.headers.update({'X-Authorization': '{} {}'.format(self.api_user, self.api_key)})
 
     def _get_config_args_params(self, config_args):
-        ''' gets args to setup a client connection
+        """ gets args to setup a client connection
         
         Args:
             config_args (dict):
@@ -75,7 +75,7 @@ class IRFlowClient(object):
                     "protocol":"https unless otherwise specified"
                     "debug":"enable debug output, default = None"
                     "verbose":"turn up the verbosity"
-        '''
+        """
 
         # Missing config checks done before class initializes in argparse
 
@@ -101,12 +101,12 @@ class IRFlowClient(object):
 
     def _get_config_file_params(self, config_file):
 
-        config = ConfigParser.ConfigParser()
+        config = configparser.ConfigParser()
         config.read(config_file)
 
         # Make sure the Config File has the IRFlowAPI Section
         if not config.has_section('IRFlowAPI'):
-            print 'Config file "%s" does not have the required section "[IRFlowAPI]"' % config_file
+            print('Config file "%s" does not have the required section "[IRFlowAPI]"' % config_file)
             sys.exit()
 
         missing_config = False
@@ -156,13 +156,13 @@ class IRFlowClient(object):
             self.dump_settings()
 
     def dump_settings(self):
-        print ('========== IRFlowAPI Created ==========')
-        print ('Configuration Settings:')
-        print ('\tAddress: "%s"' % self.address)
-        print ('\tAPI_User: "%s"' % self.api_user)
-        print ('\tAPI_Key: "%s"' % self.api_key)
-        print ('\tProtocol: "%s"' % self.protocol)
-        print ('\tDebug: "%s"' % self.debug)
+        print('========== IRFlowAPI Created ==========')
+        print('Configuration Settings:')
+        print('\tAddress: "%s"' % self.address)
+        print('\tAPI_User: "%s"' % self.api_user)
+        print('\tAPI_Key: "%s"' % self.api_key)
+        print('\tProtocol: "%s"' % self.protocol)
+        print('\tDebug: "%s"' % self.debug)
         print('\tVerbose: "%s"' % self.verbose)
 
     def close_alert(self, alert_num, close_reason):
@@ -172,19 +172,19 @@ class IRFlowClient(object):
 
         if self.debug:
             print('========== Close Alert ==========')
-            print ('URL: "%s"' % url)
-            print ('Body: "%s"' % data)
-            print ('Session Headers: "%s"' % self.session.headers)
-            print ('Headers: "%s"' % headers)
+            print('URL: "%s"' % url)
+            print('Body: "%s"' % data)
+            print('Session Headers: "%s"' % self.session.headers)
+            print('Headers: "%s"' % headers)
 
         response = self.session.put(url, json=data, headers=headers, verify=False)
 
         if self.debug:
             if self.verbose > 0:
                 print('========== Close Alert Response ==========')
-                print ('HTTP Status: "%s"' % response.status_code)
+                print('HTTP Status: "%s"' % response.status_code)
             if self.verbose > 1:
-                print ('Response Json:')
+                print('Response Json:')
                 self.pp.pprint(response.json())
         return response.json()
 
@@ -195,18 +195,18 @@ class IRFlowClient(object):
 
         if self.debug:
             print('========== Attach Incident to Alert ==========')
-            print ('URL: "%s"' % url)
-            print ('Session Headers: "%s"' % self.session.headers)
-            print ('Headers: "%s"' % headers)
+            print('URL: "%s"' % url)
+            print('Session Headers: "%s"' % self.session.headers)
+            print('Headers: "%s"' % headers)
 
         response = self.session.put(url, json=data, headers=headers, verify=False)
 
         if self.debug:
             if self.verbose > 0:
                 print('========== Attach Incident to Alert Response ==========')
-                print ('HTTP Status: "%s"' % response.status_code)
+                print('HTTP Status: "%s"' % response.status_code)
             if self.verbose > 1:
-                print ('Response Json:')
+                print('Response Json:')
                 self.pp.pprint(response.json())
         return response.json()
 
@@ -217,19 +217,19 @@ class IRFlowClient(object):
         headers = {}
 
         if self.debug:
-            print ('========== Upload Attachment to Alert ==========')
-            print ('URL: "%s"' % url)
-            print ('Session Headers: "%s"' % self.session.headers)
-            print ('Headers: "%s"' % headers)
+            print('========== Upload Attachment to Alert ==========')
+            print('URL: "%s"' % url)
+            print('Session Headers: "%s"' % self.session.headers)
+            print('Headers: "%s"' % headers)
 
         response = self.session.post(url, data={}, files=data, headers=headers, verify=False)
 
         if self.debug:
             if self.verbose > 0:
                 print('========== Response ==========')
-                print ('HTTP Status: "%s"' % response.status_code)
+                print('HTTP Status: "%s"' % response.status_code)
             if self.verbose > 1:
-                print ('Response Json:')
+                print('Response Json:')
                 self.pp.pprint(response.json())
 
         return response.json()
@@ -241,19 +241,19 @@ class IRFlowClient(object):
         headers = {}
 
         if self.debug:
-            print ('========== Upload Attachment to Incident ==========')
-            print ('URL: "%s"' % url)
-            print ('Session Headers: "%s"' % self.session.headers)
-            print ('Headers: "%s"' % headers)
+            print('========== Upload Attachment to Incident ==========')
+            print('URL: "%s"' % url)
+            print('Session Headers: "%s"' % self.session.headers)
+            print('Headers: "%s"' % headers)
 
         response = self.session.post(url, data={}, files=data, headers=headers, verify=False)
 
         if self.debug:
             if self.verbose > 0:
                 print('========== Response ==========')
-                print ('HTTP Status: "%s"' % response.status_code)
+                print('HTTP Status: "%s"' % response.status_code)
             if self.verbose > 1:
-                print ('Response Json:')
+                print('Response Json:')
                 self.pp.pprint(response.json())
 
         return response.json()
@@ -265,19 +265,19 @@ class IRFlowClient(object):
         headers = {}
 
         if self.debug:
-            print ('========== Upload Attachment to Alert ==========')
-            print ('URL: "%s"' % url)
-            print ('Session Headers: "%s"' % self.session.headers)
-            print ('Headers: "%s"' % headers)
+            print('========== Upload Attachment to Alert ==========')
+            print('URL: "%s"' % url)
+            print('Session Headers: "%s"' % self.session.headers)
+            print('Headers: "%s"' % headers)
 
         response = self.session.post(url, data={}, files=data, headers=headers, verify=False)
 
         if self.debug:
             if self.verbose > 0:
                 print('========== Response ==========')
-                print ('HTTP Status: "%s"' % response.status_code)
+                print('HTTP Status: "%s"' % response.status_code)
             if self.verbose > 1:
-                print ('Response Json:')
+                print('Response Json:')
                 self.pp.pprint(response.json())
 
         return response.json()
@@ -287,10 +287,10 @@ class IRFlowClient(object):
         url = url % attachment_id
 
         if self.debug:
-            print ('========== Download Attachment ==========')
-            print ('URL: "%s"' % url)
-            print ('Session Headers: "%s"' % self.session.headers)
-            print ('Headers: "%s"' % '')
+            print('========== Download Attachment ==========')
+            print('URL: "%s"' % url)
+            print('Session Headers: "%s"' % self.session.headers)
+            print('Headers: "%s"' % '')
 
         with open(attachment_output_file, 'wb') as handle:
             response = self.session.get(url, stream=True, verify=False)
@@ -300,17 +300,17 @@ class IRFlowClient(object):
         if self.debug:
             if self.verbose > 0:
                 print('========== Response ==========')
-                print ('HTTP Status: "%s"' % response.status_code)
+                print('HTTP Status: "%s"' % response.status_code)
 
     def download_attachment_string(self, attachment_id):
         url = '%s://%s/%s' % (self.protocol, self.address, self.end_points['get_attachment'])
         url = url % attachment_id
 
         if self.debug:
-            print ('========== Download Attachment ==========')
-            print ('URL: "%s"' % url)
-            print ('Session Headers: "%s"' % self.session.headers)
-            print ('Headers: "%s"' % '')
+            print('========== Download Attachment ==========')
+            print('URL: "%s"' % url)
+            print('Session Headers: "%s"' % self.session.headers)
+            print('Headers: "%s"' % '')
 
         # Get a temporary file to download the results into
         temp = tempfile.TemporaryFile()
@@ -325,7 +325,7 @@ class IRFlowClient(object):
         if self.debug:
             if self.verbose > 0:
                 print('========== Response ==========')
-                print ('HTTP Status: "%s"' % response.status_code)
+                print('HTTP Status: "%s"' % response.status_code)
 
         return temp.read()
 
@@ -337,20 +337,20 @@ class IRFlowClient(object):
         }
         fact_payload = {'fields': fact_data}
         if self.debug:
-            print ('========== PutFactGroup ==========')
-            print ('URL: "%s"' % url)
-            print ('Params: "%s"' % fact_payload)
-            print ('Session Headers: "%s"' % self.session.headers)
-            print ('Headers: "%s"' % headers)
+            print('========== PutFactGroup ==========')
+            print('URL: "%s"' % url)
+            print('Params: "%s"' % fact_payload)
+            print('Session Headers: "%s"' % self.session.headers)
+            print('Headers: "%s"' % headers)
 
         response = self.session.put(url, json=fact_payload, verify=False, headers=headers)
 
         if self.debug:
             if self.verbose > 0:
                 print('========== Response ==========')
-                print ('HTTP Status: "%s"' % response.status_code)
+                print('HTTP Status: "%s"' % response.status_code)
             if self.verbose > 1:
-                print ('Response Json:')
+                print('Response Json:')
                 self.pp.pprint(response.json())
 
         return response.json()
@@ -362,20 +362,20 @@ class IRFlowClient(object):
             'Accept': 'application/json'
         }
         if self.debug:
-            print ('========== GetFactGroup ==========')
-            print ('URL: "%s"' % url)
-            print ('Params: ""')
-            print ('Session Headers: "%s"' % self.session.headers)
-            print ('Headers: "%s"' % headers)
+            print('========== GetFactGroup ==========')
+            print('URL: "%s"' % url)
+            print('Params: ""')
+            print('Session Headers: "%s"' % self.session.headers)
+            print('Headers: "%s"' % headers)
 
         response = self.session.get(url, verify=False, headers=headers)
 
         if self.debug:
             if self.verbose > 0:
                 print('========== Response ==========')
-                print ('HTTP Status: "%s"' % response.status_code)
+                print('HTTP Status: "%s"' % response.status_code)
             if self.verbose > 1:
-                print ('Response Json:')
+                print('Response Json:')
                 self.pp.pprint(response.json())
 
         return response.json()
@@ -387,20 +387,20 @@ class IRFlowClient(object):
             'Accept': 'application/json'
         }
         if self.debug:
-            print ('========== Get Alert ==========')
-            print ('URL: "%s"' % url)
-            print ('Params: ""')
-            print ('Session Headers: "%s"' % self.session.headers)
-            print ('Headers: "%s"' % headers)
+            print('========== Get Alert ==========')
+            print('URL: "%s"' % url)
+            print('Params: ""')
+            print('Session Headers: "%s"' % self.session.headers)
+            print('Headers: "%s"' % headers)
 
         response = self.session.get(url, verify=False, headers=headers)
 
         if self.debug:
             if self.verbose > 0:
                 print('========== Response ==========')
-                print ('HTTP Status: "%s"' % response.status_code)
+                print('HTTP Status: "%s"' % response.status_code)
             if self.verbose > 1:
-                print ('Response Json:')
+                print('Response Json:')
                 self.pp.pprint(response.json())
 
         return response.json()
@@ -421,20 +421,20 @@ class IRFlowClient(object):
             params['data_field_group_name'] = incoming_field_group_name
 
         if self.debug:
-            print ('========== Create Alert ==========')
-            print ('URL: "%s"' % url)
-            print ('Params: %s' % params)
-            print ('Session Headers: "%s"' % self.session.headers)
-            print ('Headers: "%s"' % headers)
+            print('========== Create Alert ==========')
+            print('URL: "%s"' % url)
+            print('Params: %s' % params)
+            print('Session Headers: "%s"' % self.session.headers)
+            print('Headers: "%s"' % headers)
 
         response = self.session.post(url, json=params, verify=False, headers=headers)
 
         if self.debug:
             if self.verbose > 0:
                 print('========== Response ==========')
-                print ('HTTP Status: "%s"' % response.status_code)
+                print('HTTP Status: "%s"' % response.status_code)
             if self.verbose > 1:
-                print ('Response Json:')
+                print('Response Json:')
                 self.pp.pprint(response.json())
 
         return response.json()
@@ -456,20 +456,20 @@ class IRFlowClient(object):
             params['description'] = description
 
         if self.debug:
-            print ('========== Create Incident ==========')
-            print ('URL: "%s"' % url)
-            print ('Params: %s' % params)
-            print ('Session Headers: "%s"' % self.session.headers)
-            print ('Headers: "%s"' % headers)
+            print('========== Create Incident ==========')
+            print('URL: "%s"' % url)
+            print('Params: %s' % params)
+            print('Session Headers: "%s"' % self.session.headers)
+            print('Headers: "%s"' % headers)
 
         response = self.session.post(url, json=params, verify=False, headers=headers)
 
         if self.debug:
             if self.verbose > 0:
                 print('========== Response ==========')
-                print ('HTTP Status: "%s"' % response.status_code)
+                print('HTTP Status: "%s"' % response.status_code)
             if self.verbose > 1:
-                print ('Response Json:')
+                print('Response Json:')
                 self.pp.pprint(response.json())
 
         return response.json()
@@ -482,24 +482,25 @@ class IRFlowClient(object):
             'Accept': 'application/json'
         }
         if self.debug:
-            print ('========== Get Incident ==========')
-            print ('URL: "%s"' % url)
-            print ('Session Headers: "%s"' % self.session.headers)
-            print ('Headers: "%s"' % headers)
+            print('========== Get Incident ==========')
+            print('URL: "%s"' % url)
+            print('Session Headers: "%s"' % self.session.headers)
+            print('Headers: "%s"' % headers)
 
         response = self.session.get(url, verify=False, headers=headers)
 
         if self.debug:
             if self.verbose > 0:
                 print('========== Response ==========')
-                print ('HTTP Status: "%s"' % response.status_code)
+                print('HTTP Status: "%s"' % response.status_code)
             if self.verbose > 1:
-                print ('Response Json:')
+                print('Response Json:')
                 self.pp.pprint(response.json())
 
         return response.json()
 
-    def update_incident(self, incident_num, incident_fields, incident_type_name, incident_subtype_name=None, description=None):
+    def update_incident(self, incident_num, incident_fields, incident_type_name, incident_subtype_name=None,
+                        description=None):
         url = '%s://%s/%s' % (self.protocol, self.address, self.end_points['put_incident'])
         url = url % incident_num
         params = {
@@ -517,20 +518,20 @@ class IRFlowClient(object):
             params['description'] = description
 
         if self.debug:
-            print ('========== Update Incident ==========')
-            print ('URL: "%s"' % url)
-            print ('Params: %s' % params)
-            print ('Session Headers: "%s"' % self.session.headers)
-            print ('Headers: "%s"' % headers)
+            print('========== Update Incident ==========')
+            print('URL: "%s"' % url)
+            print('Params: %s' % params)
+            print('Session Headers: "%s"' % self.session.headers)
+            print('Headers: "%s"' % headers)
 
         response = self.session.put(url, json=params, verify=False, headers=headers)
 
         if self.debug:
             if self.verbose > 0:
                 print('========== Response ==========')
-                print ('HTTP Status: "%s"' % response.status_code)
+                print('HTTP Status: "%s"' % response.status_code)
             if self.verbose > 1:
-                print ('Response Json:')
+                print('Response Json:')
                 self.pp.pprint(response.json())
 
         return response.json()
@@ -542,18 +543,18 @@ class IRFlowClient(object):
 
         if self.debug:
             print('========== Attach Alert to Incident ==========')
-            print ('URL: "%s"' % url)
-            print ('Session Headers: "%s"' % self.session.headers)
-            print ('Headers: "%s"' % headers)
+            print('URL: "%s"' % url)
+            print('Session Headers: "%s"' % self.session.headers)
+            print('Headers: "%s"' % headers)
 
         response = self.session.put(url, headers=headers, verify=False)
 
         if self.debug:
             if self.verbose > 0:
                 print('========== Attach Alert Response ==========')
-                print ('HTTP Status: "%s"' % response.status_code)
+                print('HTTP Status: "%s"' % response.status_code)
             if self.verbose > 1:
-                print ('Response Json:')
+                print('Response Json:')
                 self.pp.pprint(response.json())
         return response.json()
 
@@ -568,19 +569,19 @@ class IRFlowClient(object):
             'Accept': 'application/json'
         }
         if self.debug:
-            print ('========== Get List of Picklists ==========')
-            print ('URL: "%s"' % url)
-            print ('Session Headers: "%s"' % self.session.headers)
-            print ('Headers: "%s"' % headers)
+            print('========== Get List of Picklists ==========')
+            print('URL: "%s"' % url)
+            print('Session Headers: "%s"' % self.session.headers)
+            print('Headers: "%s"' % headers)
 
         response = self.session.get(url, params=params, verify=False, headers=headers)
 
         if self.debug:
             if self.verbose > 0:
                 print('========== Response ==========')
-                print ('HTTP Status: "%s"' % response.status_code)
+                print('HTTP Status: "%s"' % response.status_code)
             if self.verbose > 1:
-                print ('Response Json:')
+                print('Response Json:')
                 self.pp.pprint(response.json())
 
         return response.json()
@@ -593,19 +594,19 @@ class IRFlowClient(object):
             'Accept': 'application/json'
         }
         if self.debug:
-            print ('========== Get Picklist ==========')
-            print ('URL: "%s"' % url)
-            print ('Session Headers: "%s"' % self.session.headers)
-            print ('Headers: "%s"' % headers)
+            print('========== Get Picklist ==========')
+            print('URL: "%s"' % url)
+            print('Session Headers: "%s"' % self.session.headers)
+            print('Headers: "%s"' % headers)
 
         response = self.session.get(url, verify=False, headers=headers)
 
         if self.debug:
             if self.verbose > 0:
                 print('========== Response ==========')
-                print ('HTTP Status: "%s"' % response.status_code)
+                print('HTTP Status: "%s"' % response.status_code)
             if self.verbose > 1:
-                print ('Response Json:')
+                print('Response Json:')
                 self.pp.pprint(response.json())
 
         return response.json()
@@ -626,20 +627,20 @@ class IRFlowClient(object):
             params['description'] = description
 
         if self.debug:
-            print ('========== Add Item to Picklist ==========')
-            print ('URL: "%s"' % url)
-            print ('Params: %s' % params)
-            print ('Session Headers: "%s"' % self.session.headers)
-            print ('Headers: "%s"' % headers)
+            print('========== Add Item to Picklist ==========')
+            print('URL: "%s"' % url)
+            print('Params: %s' % params)
+            print('Session Headers: "%s"' % self.session.headers)
+            print('Headers: "%s"' % headers)
 
         response = self.session.post(url, json=params, verify=False, headers=headers)
 
         if self.debug:
             if self.verbose > 0:
                 print('========== Response ==========')
-                print ('HTTP Status: "%s"' % response.status_code)
+                print('HTTP Status: "%s"' % response.status_code)
             if self.verbose > 1:
-                print ('Response Json:')
+                print('Response Json:')
                 self.pp.pprint(response.json())
 
         return response.json()
@@ -656,19 +657,19 @@ class IRFlowClient(object):
             'Accept': 'application/json'
         }
         if self.debug:
-            print ('========== Get List of Picklist Items ==========')
-            print ('URL: "%s"' % url)
-            print ('Session Headers: "%s"' % self.session.headers)
-            print ('Headers: "%s"' % headers)
+            print('========== Get List of Picklist Items ==========')
+            print('URL: "%s"' % url)
+            print('Session Headers: "%s"' % self.session.headers)
+            print('Headers: "%s"' % headers)
 
         response = self.session.get(url, params=params, verify=False, headers=headers)
 
         if self.debug:
             if self.verbose > 0:
                 print('========== Response ==========')
-                print ('HTTP Status: "%s"' % response.status_code)
+                print('HTTP Status: "%s"' % response.status_code)
             if self.verbose > 1:
-                print ('Response Json:')
+                print('Response Json:')
                 self.pp.pprint(response.json())
 
         return response.json()
@@ -689,20 +690,20 @@ class IRFlowClient(object):
             params['description'] = description
 
         if self.debug:
-            print ('========== Add Picklist Item ==========')
-            print ('URL: "%s"' % url)
-            print ('Params: %s' % params)
-            print ('Session Headers: "%s"' % self.session.headers)
-            print ('Headers: "%s"' % headers)
+            print('========== Add Picklist Item ==========')
+            print('URL: "%s"' % url)
+            print('Params: %s' % params)
+            print('Session Headers: "%s"' % self.session.headers)
+            print('Headers: "%s"' % headers)
 
         response = self.session.post(url, json=params, verify=False, headers=headers)
 
         if self.debug:
             if self.verbose > 0:
                 print('========== Response ==========')
-                print ('HTTP Status: "%s"' % response.status_code)
+                print('HTTP Status: "%s"' % response.status_code)
             if self.verbose > 1:
-                print ('Response Json:')
+                print('Response Json:')
                 self.pp.pprint(response.json())
 
         return response.json()
@@ -715,19 +716,19 @@ class IRFlowClient(object):
             'Accept': 'application/json'
         }
         if self.debug:
-            print ('========== Get Picklist Item ==========')
-            print ('URL: "%s"' % url)
-            print ('Session Headers: "%s"' % self.session.headers)
-            print ('Headers: "%s"' % headers)
+            print('========== Get Picklist Item ==========')
+            print('URL: "%s"' % url)
+            print('Session Headers: "%s"' % self.session.headers)
+            print('Headers: "%s"' % headers)
 
         response = self.session.get(url, verify=False, headers=headers)
 
         if self.debug:
             if self.verbose > 0:
                 print('========== Response ==========')
-                print ('HTTP Status: "%s"' % response.status_code)
+                print('HTTP Status: "%s"' % response.status_code)
             if self.verbose > 1:
-                print ('Response Json:')
+                print('Response Json:')
                 self.pp.pprint(response.json())
 
         return response.json()
@@ -740,19 +741,19 @@ class IRFlowClient(object):
             'Accept': 'application/json'
         }
         if self.debug:
-            print ('========== Restore Picklist Item ==========')
-            print ('URL: "%s"' % url)
-            print ('Session Headers: "%s"' % self.session.headers)
-            print ('Headers: "%s"' % headers)
+            print('========== Restore Picklist Item ==========')
+            print('URL: "%s"' % url)
+            print('Session Headers: "%s"' % self.session.headers)
+            print('Headers: "%s"' % headers)
 
         response = self.session.put(url, verify=False, headers=headers)
 
         if self.debug:
             if self.verbose > 0:
                 print('========== Response ==========')
-                print ('HTTP Status: "%s"' % response.status_code)
+                print('HTTP Status: "%s"' % response.status_code)
             if self.verbose > 1:
-                print ('Response Json:')
+                print('Response Json:')
                 self.pp.pprint(response.json())
 
         return response.json()
@@ -765,19 +766,19 @@ class IRFlowClient(object):
             'Accept': 'application/json'
         }
         if self.debug:
-            print ('========== Delete Picklist Item ==========')
-            print ('URL: "%s"' % url)
-            print ('Session Headers: "%s"' % self.session.headers)
-            print ('Headers: "%s"' % headers)
+            print('========== Delete Picklist Item ==========')
+            print('URL: "%s"' % url)
+            print('Session Headers: "%s"' % self.session.headers)
+            print('Headers: "%s"' % headers)
 
         response = self.session.delete(url, verify=False, headers=headers)
 
         if self.debug:
             if self.verbose > 0:
                 print('========== Response ==========')
-                print ('HTTP Status: "%s"' % response.status_code)
+                print('HTTP Status: "%s"' % response.status_code)
             if self.verbose > 1:
-                print ('Response Json:')
+                print('Response Json:')
                 self.pp.pprint(response.json())
 
         return response.json()
