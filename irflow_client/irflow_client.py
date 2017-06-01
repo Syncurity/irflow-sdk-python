@@ -7,7 +7,7 @@ import tempfile
 
 try:
     import configparser
-except: ImportError
+except ImportError:
     import ConfigParser as configparser
 
 # The next to lines suppress the SSL Warning
