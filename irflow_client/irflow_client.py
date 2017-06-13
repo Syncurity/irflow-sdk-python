@@ -95,8 +95,8 @@ class IRFlowClient(object):
             self.debug = config_args['debug']
         else:
             self.debug = False
-        if config_args['verbose_level']:
-            self.verbose = int(config_args['verbose_level'])
+        if config_args['verbose']:
+            self.verbose = int(config_args['verbose'])
         else:
             self.verbose = 1
 
