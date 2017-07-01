@@ -1,6 +1,7 @@
 
 from json import dumps
 import pprint
+import logging
 import requests
 import sys
 import tempfile
@@ -40,10 +41,10 @@ class IRFlowClient(object):
         'delete_picklist_item': 'api/v1/picklist_items/%s',
     }
 
-    def __init__(self, config_args=None, config_file=None):
+    def __init__(self, config_args=None, config_file=None, logger=None):
         # Create a PrettyPrint object so we can dump JSon structures if debug = true.
         self.pp = pprint.PrettyPrinter(indent=4)
-
+        self.logger = logger or logging.getLogger("IR-Flow" + __name__)
         # Make sure we have config info we need
         if not (config_args or config_file):
             print('Missing config input parameters. Need either api.conf, or to pass in config_args to'
@@ -65,7 +66,7 @@ class IRFlowClient(object):
         self.session = requests.Session()
         # Set the X-Authorization header for all calls through the API
         # The rest of the headers are specified by the individual calls.
-        self.session.headers.update({'X-Authorization': '{} {}'.format(self.api_user, self.api_key)})
+        self.session.headers.update({'X-Authorization':  "{} {}".format(self.api_user, self.api_key)})
 
     def _get_config_args_params(self, config_args):
         """ gets args to setup a client connection
@@ -87,6 +88,7 @@ class IRFlowClient(object):
         self.address = config_args['address']
         self.api_user = config_args['api_user']
         self.api_key = config_args['api_key']
+
         if config_args['protocol']:
             self.protocol = config_args['protocol']
         else:
@@ -95,9 +97,10 @@ class IRFlowClient(object):
             self.debug = config_args['debug']
         else:
             self.debug = False
-        if config_args['verbose']:
-            self.verbose = int(config_args['verbose'])
-        else:
+        try:
+            if config_args['verbose']:
+                self.verbose = int(config_args['verbose'])
+        except KeyError:
             self.verbose = 1
 
         # Dump Configuration if --debug
