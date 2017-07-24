@@ -812,7 +812,7 @@ class IRFlowClient(object):
             print('Headers: "%s"' % headers)
             print('Body: "%s"' % params)
 
-        response = self.session.post(url + "?XDEBUG_SESSION_START=10740", json=params, verify=False, headers=headers)
+        response = self.session.post(url, json=params, verify=False, headers=headers)
 
         if self.debug:
             if self.verbose > 0:
