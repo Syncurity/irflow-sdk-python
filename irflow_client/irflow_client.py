@@ -413,10 +413,11 @@ class IRFlowClient(object):
 
         return response.json()
 
-    def create_alert(self, alert_fields, description=None, incoming_field_group_name=None):
+    def create_alert(self, alert_fields, description=None, incoming_field_group_name=None, suppress_missing_field_warning=False):
         url = '%s://%s/%s' % (self.protocol, self.address, self.end_points['create_alert'])
         params = {
             'fields': alert_fields,
+            'suppress_missing_field_warning': suppress_missing_field_warning
         }
         headers = {
             'Content-type': 'application/json',
