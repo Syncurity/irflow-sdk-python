@@ -791,7 +791,7 @@ class IRFlowClient(object):
 
         return response.json()
 
-    def store_object_type(self, type_name=None, parent_type_name=None, type_label=None, parent_type_id=None):
+    def create_object_type(self, type_name=None, parent_type_name=None, type_label=None, parent_type_id=None):
         url = '%s://%s/%s' % (self.protocol, self.address, self.end_points['object_type'])
         headers = {
             'Content-type': 'application/json',
