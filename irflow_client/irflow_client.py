@@ -791,7 +791,14 @@ class IRFlowClient(object):
 
         return response.json()
 
-    def create_object_type(self, type_name=None, parent_type_name=None, type_label=None, parent_type_id=None):
+    def create_object_type(self, type_name, type_label, parent_type_name=None, parent_type_id=None):
+        if type_name is None:
+            raise TypeError("type_name is required")
+        if type_label is None:
+            raise TypeError("type_label is required")
+        if parent_type_name is None and parent_type_id is None:
+            raise TypeError("Either parent_type_name or parent_type_id is required")
+
         url = '%s://%s/%s' % (self.protocol, self.address, self.end_points['object_type'])
         headers = {
             'Content-type': 'application/json',

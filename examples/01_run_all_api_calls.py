@@ -20,7 +20,7 @@ if irflowAPI.debug == "true":
     irflowAPI.dump_settings()
 
 print ('========== Create Object Type ==========')
-object_type = irflowAPI.store_object_type("createdByApi6", "alert")
+object_type = irflowAPI.create_object_type(type_name="createdByApi6", type_label="CreatedByAPi6", parent_type_name="alert")
 if object_type['success']:
     print("Created object_type with id" + str(object_type['data']['object_type']['id']))
 else:
