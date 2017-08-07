@@ -19,6 +19,21 @@ irflowAPI = irflow_client.IRFlowClient(config_file="./api.conf")
 if irflowAPI.debug == "true":
     irflowAPI.dump_settings()
 
+print ('========== Create Object Type ==========')
+object_type = irflowAPI.create_object_type(type_name="createdByApi6", type_label="CreatedByAPi6", parent_type_name="alert")
+if object_type['success']:
+    print("Created object_type with id" + str(object_type['data']['object_type']['id']))
+else:
+    print("Failed to create object type")
+
+
+print ('========== Attach Field to Object Type ==========')
+attach_field = irflowAPI.attach_field_to_object_type('createdByApi6', 'av_detected')
+if attach_field['success']:
+    print("Attached field av_detected")
+else:
+    print("Failed to attach field av_detected")
+
 print ('========== Create Alert ==========')
 # Create an Alert using the API
 # First set-up the alert data we want to use to create this alert with.
@@ -56,12 +71,12 @@ if new_alert['success']:
 else:
     print("Get Alert: Failed")
 
-print('========== Get Fact Group ==========')
-
-
+# print('========== Get Fact Group ==========')
+#
+#
 fact_group_id = new_alert['data']['alert']['fact_group_id']
 fact_data = irflowAPI.get_fact_group(fact_group_id)
-
+#
 if fact_data['success']:
     print("Get Fact Group: Success")
     facts = fact_data['data']['fact_group']['facts']  # List of the facts

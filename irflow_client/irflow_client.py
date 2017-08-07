@@ -39,6 +39,7 @@ class IRFlowClient(object):
         'get_picklist_item': 'api/v1/picklist_items/%s',
         'restore_picklist_item': 'api/v1/picklist_items/%s/restore',
         'delete_picklist_item': 'api/v1/picklist_items/%s',
+        'object_type': 'api/v1/object_types'
     }
 
     def __init__(self, config_args=None, config_file=None, logger=None):
@@ -437,7 +438,6 @@ class IRFlowClient(object):
             print('Headers: "%s"' % headers)
 
         response = self.session.post(url, json=params, verify=False, headers=headers)
-
         if self.debug:
             if self.verbose > 0:
                 print('========== Response ==========')
@@ -781,6 +781,77 @@ class IRFlowClient(object):
             print('Headers: "%s"' % headers)
 
         response = self.session.delete(url, verify=False, headers=headers)
+
+        if self.debug:
+            if self.verbose > 0:
+                print('========== Response ==========')
+                print('HTTP Status: "%s"' % response.status_code)
+            if self.verbose > 1:
+                print('Response Json:')
+                self.pp.pprint(response.json())
+
+        return response.json()
+
+    def create_object_type(self, type_name, type_label, parent_type_name=None, parent_type_id=None):
+        if type_name is None:
+            raise TypeError("type_name is required")
+        if type_label is None:
+            raise TypeError("type_label is required")
+        if parent_type_name is None and parent_type_id is None:
+            raise TypeError("Either parent_type_name or parent_type_id is required")
+
+        url = '%s://%s/%s' % (self.protocol, self.address, self.end_points['object_type'])
+        headers = {
+            'Content-type': 'application/json',
+            'Accept': 'application/json'
+        }
+
+        params = {
+            'type_name': type_name,
+            'type_label': type_label,
+            'parent_type_name': parent_type_name,
+            'parent_type_id': parent_type_id
+        }
+
+        if self.debug:
+            print('========== Store Object Type ==========')
+            print('URL: "%s"' % url)
+            print('Session Headers: "%s"' % self.session.headers)
+            print('Headers: "%s"' % headers)
+            print('Body: "%s"' % params)
+
+        response = self.session.post(url, json=params, verify=False, headers=headers)
+
+        if self.debug:
+            if self.verbose > 0:
+                print('========== Response ==========')
+                print('HTTP Status: "%s"' % response.status_code)
+            if self.verbose > 1:
+                print('Response Json:')
+                self.pp.pprint(response.json())
+
+        return response.json()
+
+    def attach_field_to_object_type(self, object_type_name, field_name, object_type_id=None, field_id=None):
+        url = '%s://%s/%s/%s' % (self.protocol, self.address, self.end_points['object_type'], 'attach_field')
+        headers = {
+            'Content-type': 'application/json',
+            'Accept': 'application/json'
+        }
+        if self.debug:
+            print('========== Attach Field to Object Type ==========')
+            print('URL: "%s"' % url)
+            print('Session Headers: "%s"' % self.session.headers)
+            print('Headers: "%s"' % headers)
+
+        params = {
+            'object_type_name': object_type_name,
+            'field_name': field_name,
+            'object_type_id': object_type_id,
+            'field_id': field_id
+        }
+
+        response = self.session.put(url, json=params, verify=False, headers=headers)
 
         if self.debug:
             if self.verbose > 0:
