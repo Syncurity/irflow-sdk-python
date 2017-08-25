@@ -113,7 +113,8 @@ authenticate the REST call.  In addition, the user must be a member of a group w
  Field Groups and Triage Steps" screen.
  9. Press the "+" Add button in the upper right corner.  This opens the Add a Data Source modal.
  10. Type in "ds_test" for the name, and select "Test Alert" from the Object Type drop down.
- 11. Save the new Data Source.
+ 11. Add another alert called "phishing" and select "Alert" from the Object Type drop down.
+ 12. Save the new Data Source.
 
  You have now configured IR Flow to accept the data as the python scripts send it.
  
@@ -126,7 +127,11 @@ authenticate the REST call.  In addition, the user must be a member of a group w
  3. Press the "Create" button on the upper right corner of the screen.
  4. Enter "Red Team Testing" for the name, fill in a description.
  5. Save the Close Reason.
-
+ 
+ #### Add fields to Alert
+ The 01_run_all_api_calls.py assumes the Alert object type will have two fields, "description" and "src_dns".
+ Create them in the same way you created the Tier and Risk fields on Test Alert, but this time add them to the
+ top level Alert.
 
  #### Configure the IR Flow Client library.
 
