@@ -9,3 +9,5 @@ irflow-sdk-python changelog
 * v1.1.5 -  Move to a universal wheel module
 * v1.1.6 -  Fix __init.py__
 * v1.1.8 -  Add create object method
+* v1.1.9 -  Fix requirements.txt build issue
+* v.1.1.10 - Fix MANIFEST.in
