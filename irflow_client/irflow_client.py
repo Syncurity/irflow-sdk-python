@@ -197,7 +197,7 @@ class IRFlowClient(object):
                 self.pp.pprint(response.json())
         return response.json()
 
-    def attach_incident_to_alert(self, incident_num, alert_num):
+    def attach_alert_to_incident(self, incident_num, alert_num):
         url = '%s://%s/%s' % (self.protocol, self.address, self.end_points['put_incident_on_alert'])
         url = url % (alert_num, incident_num)
         headers = {'Content-type': 'application/json'}
