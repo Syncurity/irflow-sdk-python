@@ -18,6 +18,9 @@ requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 
 class IRFlowClient(object):
+    """Python SDK for the IR-Flow REST API
+
+    """
     end_points = {
         'create_alert': 'api/v1/alerts',
         'get_alert': 'api/v1/alerts',
@@ -43,6 +46,13 @@ class IRFlowClient(object):
     }
 
     def __init__(self, config_args=None, config_file=None, logger=None):
+        """Create an API Client instance
+
+        Args:
+             config_args (dict): Key, Value pairs of IR-Flow API configuration options
+             config_file (str): Path to a valid Ir-Flow configuration file
+             logger (:obj:`Logger`): optional default logging bus for client messages
+        """
         # Create a PrettyPrint object so we can dump JSon structures if debug = true.
         self.pp = pprint.PrettyPrinter(indent=4)
         self.logger = logger or logging.getLogger("IR-Flow" + __name__)
@@ -70,7 +80,7 @@ class IRFlowClient(object):
         self.session.headers.update({'X-Authorization':  "{} {}".format(self.api_user, self.api_key)})
 
     def _get_config_args_params(self, config_args):
-        """ gets args to setup a client connection
+        """Helper function to check/parse configuration arguments provided as a dict
         
         Args:
             config_args (dict):
@@ -78,7 +88,7 @@ class IRFlowClient(object):
                     "address":"IR-Flow Server FQDN or IP Address"
                     "api_user":"IR-Flow API User"
                     "api_key":"above user's api key"
-                Optional
+                Optional:
                     "protocol":"https unless otherwise specified"
                     "debug":"enable debug output, default = None"
                     "verbose":"turn up the verbosity"
@@ -109,7 +119,11 @@ class IRFlowClient(object):
             self.dump_settings()
 
     def _get_config_file_params(self, config_file):
+        """Helper function to parse configuration arguments from a valid IR-Flow configuration file
 
+        Args:
+            config_file (str): Path to a valid IR-Flow configuration file
+        """
         config = configparser.ConfigParser()
         config.read(config_file)
 
@@ -165,6 +179,8 @@ class IRFlowClient(object):
             self.dump_settings()
 
     def dump_settings(self):
+        """Helper function to print configuration information
+        """
         print('========== IRFlowAPI Created ==========')
         print('Configuration Settings:')
         print('\tAddress: "%s"' % self.address)
@@ -175,6 +191,15 @@ class IRFlowClient(object):
         print('\tVerbose: "%s"' % self.verbose)
 
     def close_alert(self, alert_num, close_reason):
+        """Close the alert with the provided number, for the provided reason
+
+        Args:
+            alert_num (int): The IR-Flow assigned alert number of the alert to close
+            close_reason (str): The reason for which to close the desired alert
+
+        Returns:
+            dict: The full json response object returned by the IR-Flow API
+        """
         url = '%s://%s/%s' % (self.protocol, self.address, self.end_points['put_alert_close'])
         data = {"alert_num": "%s" % alert_num, "close_reason_name": "%s" % close_reason}
         headers = {'Content-type': 'application/json'}
@@ -198,6 +223,15 @@ class IRFlowClient(object):
         return response.json()
 
     def attach_alert_to_incident(self, incident_num, alert_num):
+        """Attach the specified alert to the specified incident
+
+        Args:
+            incident_num (int): The Incident Number of the Incident to which the specified alert should be attached
+            alert_num (int): The IR-Flow Assigned Alert Number of the Alert to attach to the specified incident
+
+        Returns:
+            dict: The full json response object returned by the IR-Flow API
+        """
         url = '%s://%s/%s' % (self.protocol, self.address, self.end_points['put_incident_on_alert'])
         url = url % (alert_num, incident_num)
         headers = {'Content-type': 'application/json'}
@@ -220,6 +254,16 @@ class IRFlowClient(object):
         return response.json()
 
     def upload_attachment_to_alert(self, alert_num, filename):
+        """Upload an attachment to the specified alert
+
+        Args:
+            alert_num (int): The IR-Flow Assigned Alert number of the Alert to which the desired filed should be
+                uploaded
+            filename (str): The path to the file to be uploaded
+
+        Returns:
+            dict: The full json response object returned by the IR-Flow API
+        """
         url = '%s://%s/%s' % (self.protocol, self.address, self.end_points['put_attachment'])
         url = url % ('alerts', alert_num)
         data = {'file': open(filename, 'rb')}
@@ -244,6 +288,15 @@ class IRFlowClient(object):
         return response.json()
 
     def upload_attachment_to_incident(self, incident_id, filename):
+        """Upload an attachment to the specified incident
+
+        Args:
+            incident_id (int): The ID of the Incident to which the desired file should be uploaded
+            filename (str): The path to the file to be uploaded
+
+        Returns:
+            dict: The full json response object returned by the IR-Flow API
+        """
         url = '%s://%s/%s' % (self.protocol, self.address, self.end_points['put_attachment'])
         url = url % ('incidents', incident_id)
         data = {'file': open(filename, 'rb')}
@@ -268,6 +321,15 @@ class IRFlowClient(object):
         return response.json()
 
     def upload_attachment_to_task(self, task_id, filename):
+        """Upload an attachment to the specified task
+
+        Args:
+            task_id (int): The ID of the task to which the desired file should be uploaded
+            filename (str): The path to the file to be uploaded
+
+        Returns:
+            dict: The full json response object returned by the IR-Flow API
+        """
         url = '%s://%s/%s' % (self.protocol, self.address, self.end_points['put_attachment'])
         url = url % ('tasks', task_id)
         data = {'file': open(filename, 'rb')}
@@ -292,6 +354,14 @@ class IRFlowClient(object):
         return response.json()
 
     def download_attachment(self, attachment_id, attachment_output_file):
+        """Download the attachment with the specified ID
+
+        Args:
+            attachment_id (int): The ID of the attachment to be downloaded
+            attachment_output_file (str): The full path to the file on disk to which the desired attachment should be
+                saved
+
+        """
         url = '%s://%s/%s' % (self.protocol, self.address, self.end_points['get_attachment'])
         url = url % attachment_id
 
@@ -312,6 +382,14 @@ class IRFlowClient(object):
                 print('HTTP Status: "%s"' % response.status_code)
 
     def download_attachment_string(self, attachment_id):
+        """Download an attachment and return it as text
+
+        Args:
+            attachment_id (int): The ID of the attachment to be downloaded
+
+        Returns:
+            str: The textual contents of the downloaded file
+        """
         url = '%s://%s/%s' % (self.protocol, self.address, self.end_points['get_attachment'])
         url = url % attachment_id
 
