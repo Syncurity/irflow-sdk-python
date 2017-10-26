@@ -1,4 +1,6 @@
+"""Python SDK and Wrapper for the IR-Flow REST API
 
+"""
 from json import dumps
 import pprint
 import logging
@@ -417,6 +419,15 @@ class IRFlowClient(object):
         return temp.read()
 
     def put_fact_group(self, fact_group_id, fact_data):
+        """Put new or updated fact data in the specified fact group
+
+        Args:
+            fact_group_id (int): The IR-Flow assigned ID of the fact_group to be updated
+            fact_data (dict): Key, Value pairs of fact fields as specified in IR-Flow and their values
+
+        Returns:
+            dict: The full json response object from the IR-Flow API
+        """
         url = '%s://%s/%s/%s' % (self.protocol, self.address, self.end_points['get_fact_group'], fact_group_id)
         headers = {
             'Content-type': 'application/json',
@@ -443,6 +454,14 @@ class IRFlowClient(object):
         return response.json()
 
     def get_fact_group(self, fact_group_id):
+        """Retrieve the current data in the specified fact group
+
+        Args:
+            fact_group_id (int): The IR-Flow assigned IF of the fact_group to retrieve
+
+        Returns:
+            dict: The full json response object from the IR-Flow API
+        """
         url = '%s://%s/%s/%s' % (self.protocol, self.address, self.end_points['get_fact_group'], fact_group_id)
         headers = {
             'Content-type': 'application/json',
@@ -468,6 +487,14 @@ class IRFlowClient(object):
         return response.json()
 
     def get_alert(self, alert_num):
+        """Retrieve the alert with the specified alert number
+
+        Args:
+            alert_num (int): The IR-Flow assigned alert number of the alert to retrieve
+
+        Returns:
+            dict: The full json response object from the IR-Flow API
+        """
         url = '%s://%s/%s/%s' % (self.protocol, self.address, self.end_points['get_alert'], alert_num)
         headers = {
             'Content-type': 'application/json',
@@ -493,6 +520,19 @@ class IRFlowClient(object):
         return response.json()
 
     def create_alert(self, alert_fields, description=None, incoming_field_group_name=None, suppress_missing_field_warning=False):
+        """Create an alert of the desired field group name with the specified fields and description
+
+        Args:
+            alert_fields (dict): Key, Value pairs of fields configured in IR-Flow and their values
+            description (str): An optional string description for the alert
+            incoming_field_group_name (str): The string name of the incoming field group name for this alert as
+                specified in IR-Flow
+            suppress_missing_field_warning (bool): Suppress the API warnings indicating missing fields if `True` -
+                defaults to `False`
+
+        Returns:
+            dict: The full json response object from the IR-Flow API
+        """
         url = '%s://%s/%s' % (self.protocol, self.address, self.end_points['create_alert'])
         params = {
             'fields': alert_fields,
@@ -527,6 +567,15 @@ class IRFlowClient(object):
         return response.json()
 
     def create_incident(self, incident_fields, incident_type_name, incident_subtype_name=None, description=None):
+        """Create an incident of the desired type and subtype with the specified fields and description
+
+        Args:
+            incident_fields (dict): Key, Value pairs of fields configured in IR-Flow and their values
+            incident_type_name (str): The string name of the incident type with which this incident should be created
+            incident_subtype_name (str): The string name of the incident subtype with which this incident should be
+                created (optional)
+            description (str): An optional string description for the incident
+        """
         url = '%s://%s/%s' % (self.protocol, self.address, self.end_points['create_incident'])
         params = {
             'fields': incident_fields,
@@ -562,6 +611,14 @@ class IRFlowClient(object):
         return response.json()
 
     def get_incident(self, incident_num):
+        """Retrieve the incident with the specified ID
+
+        Args:
+            incident_num (int): The IR-Flow assigned ID of the incident to be retrieved
+
+        Returns:
+            dict: The full json response object from the IR-Flow API
+        """
         url = '%s://%s/%s' % (self.protocol, self.address, self.end_points['get_incident'])
         url = url % incident_num
         headers = {
@@ -588,6 +645,18 @@ class IRFlowClient(object):
 
     def update_incident(self, incident_num, incident_fields, incident_type_name, incident_subtype_name=None,
                         description=None):
+        """Update the incident of the provided number, type, and subtype with the provided fields and description
+
+        Args:
+            incident_num (int): The IR-Flow assigned ID of the incident to update
+            incident_fields (dict): Key, Value pairs of fields configured in IR-Flow and their values
+            incident_type_name (str): The string name of the incident type of the desired incident
+            incident_subtype_name (str): The string name of the incident subtype of the desired incident (optional)
+            description (str): An optional string description for the incident
+
+        Returns:
+             dict: The full json response object from the IR-Flow API
+        """
         url = '%s://%s/%s' % (self.protocol, self.address, self.end_points['put_incident'])
         url = url % incident_num
         params = {
@@ -624,6 +693,15 @@ class IRFlowClient(object):
         return response.json()
 
     def attach_alert_to_incident(self, alert_num, incident_num):
+        """Attach the specified alert to the specified incident
+
+        Args:
+            incident_num (int): The Incident Number of the Incident to which the specified alert should be attached
+            alert_num (int): The IR-Flow Assigned Alert Number of the Alert to attach to the specified incident
+
+        Returns:
+            dict: The full json response object returned by the IR-Flow API
+        """
         url = '%s://%s/%s' % (self.protocol, self.address, self.end_points['put_alert_on_incident'])
         url = url % (incident_num, alert_num)
         headers = {'Content-type': 'application/json'}
@@ -646,6 +724,15 @@ class IRFlowClient(object):
         return response.json()
 
     def list_picklists(self, with_trashed=False, only_trashed=False):
+        """List all picklists
+
+        Args:
+            with_trashed (bool): Include deleted picklists - `False` by default
+            only_trashed (bool): List only deleted picklists - `False` by default
+
+        Returns:
+            dict: The full json response object from the IR-Flow API
+        """
         url = '%s://%s/%s' % (self.protocol, self.address, self.end_points['get_picklist_list'])
         params = {
             'with_trashed': with_trashed,
@@ -674,6 +761,14 @@ class IRFlowClient(object):
         return response.json()
 
     def get_picklist(self, picklist_id):
+        """Retrieve the picklist with the desired ID
+
+        Args:
+            picklist_id (int): The IR-Flow assigned id of the picklist to be retrieved
+
+        Returns:
+            dict: The full json response object from the IR-Flow API
+        """
         url = '%s://%s/%s' % (self.protocol, self.address, self.end_points['get_picklist'])
         url = url % picklist_id
         headers = {
@@ -699,6 +794,17 @@ class IRFlowClient(object):
         return response.json()
 
     def add_item_to_picklist(self, picklist_id, value, label, description=None):
+        """Add an item with the provided value, label, and description to the picklist matching the provided ID
+
+        Args:
+            picklist_id (int): The IR-Flow assigned ID of the picklist to which the new item should be added
+            value (str): The string value submitted to actions and integrations for this picklist item
+            label (str): The label to be displayed for this picklist item
+            description (str): An optional description for this picklist item
+
+        Returns:
+            dict: The full json response object from the IR-Flow API
+        """
         url = '%s://%s/%s' % (self.protocol, self.address, self.end_points['add_item_to_picklist'])
         url = url % picklist_id
         params = {
@@ -733,6 +839,16 @@ class IRFlowClient(object):
         return response.json()
 
     def list_picklist_items(self, picklist_id, with_trashed=False, only_trashed=False):
+        """Retrieve a list of all picklist items in a specified list
+
+        Args:
+            picklist_id (int): The IR-Flow Assigned ID of the picklist whose items to list
+            with_trashed (bool): Include deleted items - `False` by default
+            only_trashed (bool): Only list deleted items - `False` by default
+
+        Returns:
+            dict: The full json response object from the IR-Flow API
+        """
         url = '%s://%s/%s' % (self.protocol, self.address, self.end_points['get_picklist_item_list'])
         params = {
             'picklist_id': picklist_id,
@@ -762,6 +878,17 @@ class IRFlowClient(object):
         return response.json()
 
     def create_picklist_item(self, picklist_id, value, label, description=None):
+        """Create a new item in a specified picklist
+
+        Args:
+            picklist_id (int): The IR-Flow assigned ID of the picklist to which the new item should be added
+            value (str): The string value submitted to actions and integrations for this picklist item
+            label (str): The label to be displayed for this picklist item
+            description (str): An optional description for this picklist item
+
+        Returns:
+            dict: The full json response object from the IR-Flow API
+        """
         url = '%s://%s/%s' % (self.protocol, self.address, self.end_points['create_picklist_item'])
         params = {
             'picklist_id': picklist_id,
@@ -796,6 +923,14 @@ class IRFlowClient(object):
         return response.json()
 
     def get_picklist_item(self, picklist_item_id):
+        """Retrieve the picklist item corresponding to the specified ID
+
+        Args:
+            picklist_item_id (int): The IR-Flow assigned ID of the picklist item to be retrieved
+
+        Returns:
+            dict: The full json response object from the IR-Flow API
+        """
         url = '%s://%s/%s' % (self.protocol, self.address, self.end_points['get_picklist_item'])
         url = url % picklist_item_id
         headers = {
@@ -821,6 +956,14 @@ class IRFlowClient(object):
         return response.json()
 
     def restore_picklist_item(self, picklist_item_id):
+        """Restore a previously deleted picklist item
+
+        Args:
+            picklist_item_id (int): The IR-Flow assigned ID of the picklist item to be restored
+
+        Returns:
+            dict: The full json response object from the IR-Flow API
+        """
         url = '%s://%s/%s' % (self.protocol, self.address, self.end_points['restore_picklist_item'])
         url = url % picklist_item_id
         headers = {
@@ -846,6 +989,14 @@ class IRFlowClient(object):
         return response.json()
 
     def delete_picklist_item(self, picklist_item_id):
+        """Mark a picklist item as deleted
+
+        Args:
+            picklist_item_id (int): The IR-Flow assigned ID of the picklist item to be deleted
+
+        Returns:
+            dict: The full json response object from the IR-Flow API
+        """
         url = '%s://%s/%s' % (self.protocol, self.address, self.end_points['delete_picklist_item'])
         url = url % picklist_item_id
         headers = {
@@ -871,6 +1022,18 @@ class IRFlowClient(object):
         return response.json()
 
     def create_object_type(self, type_name, type_label, parent_type_name=None, parent_type_id=None):
+        """Create an object type of the provided parent type or id with the provided name and label
+
+        Args:
+            type_name (str): The string name for this object type
+            type_label (str): The label for this object type
+            parent_type_name (str): The string name of the parent object type - required if no `parent_type_id` is
+                specified
+            parent_type_id (int): The id of the parent object type - required if no `parent_type_name` is specified
+
+        Returns:
+            dict: The full json response object from the IR-Flow API
+        """
         if type_name is None:
             raise TypeError("type_name is required")
         if type_label is None:
@@ -911,6 +1074,21 @@ class IRFlowClient(object):
         return response.json()
 
     def attach_field_to_object_type(self, object_type_name, field_name, object_type_id=None, field_id=None):
+        """Attach an existing field to an object of the specified name or id
+
+        Args:
+            object_type_name (str): The string name of the object to which the specified field should be added -
+                required only if no `object_type_id` is provided
+            field_name (str): The string name of the field to be added to the specified object - required only if no
+                `field_id` is provided
+            object_type_id (int): The IR-Flow assigned ID of the object to which the specified field should be added -
+                required only if no `object_type_name` is provided
+            field_id (int): The IR-Flow assigned IF of the field to be added to the specified object - required only if
+                no `field_name` is provided
+
+        Returns:
+            dict: The full json response object from the IR-Flow API
+        """
         url = '%s://%s/%s/%s' % (self.protocol, self.address, self.end_points['object_type'], 'attach_field')
         headers = {
             'Content-type': 'application/json',
@@ -944,6 +1122,15 @@ class IRFlowClient(object):
     # The following helper functions are also defined in the irflow_client
     @staticmethod
     def get_field_by_name(field_name, field_list):
+        """Helper function to return a field via a string name match given a field and field list
+
+        Args:
+            field_name (str): The string name of the desired field
+            field_list (list): A list of field objects
+
+        Returns:
+            dict: The field object if found, `None` otherwise
+        """
         for field in field_list:
             if field['field']['field_name'] == field_name:
                 return field
