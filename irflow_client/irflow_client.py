@@ -85,7 +85,7 @@ class IRFlowClient(object):
         """Helper function to check/parse configuration arguments provided as a dict
         
         Args:
-            config_args (dict):
+            config_args (dict): A dict of the IR-Flow API parameters
                 Required:
                     "address":"IR-Flow Server FQDN or IP Address"
                     "api_user":"IR-Flow API User"
