@@ -224,8 +224,12 @@ class IRFlowClient(object):
                 self.pp.pprint(response.json())
         return response.json()
 
-    def attach_alert_to_incident(self, incident_num, alert_num):
+    def attach_incident_to_alert(self, incident_num, alert_num):
         """Attach the specified alert to the specified incident
+
+        .. note:: This API endpoint will be deprecated in a future release. You should use
+        func:`attach_alert_to_incident`, which accomplishes the same outcome, and is how this would be done naturally in
+        the interface. No new code should use this function.
 
         Args:
             incident_num (int): The Incident Number of the Incident to which the specified alert should be attached
@@ -244,7 +248,7 @@ class IRFlowClient(object):
             print('Session Headers: "%s"' % self.session.headers)
             print('Headers: "%s"' % headers)
 
-        response = self.session.put(url, json=data, headers=headers, verify=False)
+        response = self.session.put(url, headers=headers, verify=False)
 
         if self.debug:
             if self.verbose > 0:
