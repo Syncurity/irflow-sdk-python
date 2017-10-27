@@ -1,1 +1,4 @@
 requests
+sphinxcontrib-napoleon
+pypandoc
+pandoc
