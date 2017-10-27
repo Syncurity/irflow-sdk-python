@@ -85,7 +85,7 @@ class IRFlowClient(object):
         """Helper function to check/parse configuration arguments provided as a dict
         
         Args:
-            config_args (dict):
+            config_args (dict): A dict of the IR-Flow API parameters
                 Required:
                     "address":"IR-Flow Server FQDN or IP Address"
                     "api_user":"IR-Flow API User"
@@ -227,9 +227,7 @@ class IRFlowClient(object):
     def attach_incident_to_alert(self, incident_num, alert_num):
         """Attach the specified alert to the specified incident
 
-        .. note:: This API endpoint will be deprecated in a future release. You should use
-        func:`attach_alert_to_incident`, which accomplishes the same outcome, and is how this would be done naturally in
-        the interface. No new code should use this function.
+        .. note:: This API endpoint will be deprecated in a future release. You should use :func:`attach_alert_to_incident`, which accomplishes the same outcome, and is how this would be done naturally in the interface. No new code should use this function.
 
         Args:
             incident_num (int): The Incident Number of the Incident to which the specified alert should be attached
