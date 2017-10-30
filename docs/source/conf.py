@@ -23,7 +23,7 @@ sys.path.insert(0, os.path.abspath('..'))
 sys.path.insert(0, os.path.abspath('../..'))
 can_auto_generate = False
 try:
-    from docs.source.generate_example_docs import generate_example_docs
+    from docs.source.generate_example_docs import generate_docs
     can_auto_generate = True
 except ImportError:
     print('Cannot import example documentation auto-generation functionality')
@@ -202,6 +202,6 @@ intersphinx_mapping = {'https://docs.python.org/': None}
 # Attempt to generate example docs automatically, if possible
 if can_auto_generate:
     try:
-        generate_example_docs()
+        generate_docs()
     except Exception as e:
         print('Failed to auto-generate example docs - ' + str(e))
