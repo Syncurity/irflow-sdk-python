@@ -1,6 +1,6 @@
-![PyPI](https://img.shields.io/badge/python-2.7-brightgreen.svg)
-![PyPI](https://img.shields.io/badge/python-3.6-brightgreen.svg)
-![PyPI](https://img.shields.io/badge/pypi-1.2-blue.svg)
+![PyPI1](https://img.shields.io/badge/python-2.7-brightgreen.svg)
+![PyPI2](https://img.shields.io/badge/python-3.6-brightgreen.svg)
+![PyPI3](https://img.shields.io/badge/pypi-1.2-blue.svg)
 
 # irflow-sdk-python
 
@@ -9,7 +9,7 @@
 ### Installation
 `pip install irflow_client`
 
-### Upgrade ###
+### Upgrade
 `pip install irflow_client --upgrade`
 
 ### Build from source
@@ -24,8 +24,8 @@ Pull requests are always appreciated
 Please open an issue in github
 
 ### Examples
-To get started with examples, read the README in the examples directory.  It includes two sample python scripts that use the
-irflow_client.
+To get started with examples, read the examples README.
+It includes two sample python scripts that use the irflow_client.
 
 ### Documentation
 View our documentation [here](https://syncurity-irflow-sdk-python.readthedocs-hosted.com/en/latest/)
