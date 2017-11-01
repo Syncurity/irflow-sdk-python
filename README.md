@@ -29,3 +29,6 @@ It includes two sample python scripts that use the irflow_client.
 
 ### Documentation
 View our documentation [here](https://syncurity-irflow-sdk-python.readthedocs-hosted.com/en/latest/)
+
+### irflow_client API Documentation
+See the API functions [here](https://syncurity-irflow-sdk-python.readthedocs-hosted.com/en/dev/class.html#class)
