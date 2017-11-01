@@ -13,6 +13,7 @@
 `pip install irflow_client --upgrade`
 
 ### Build from source
+Only use for development
 ` git clone git@github.com:Syncurity/irflow-sdk-python.git`  
 `pip install -e .`
 
@@ -25,3 +26,6 @@ Please open an issue in github
 ### Examples
 To get started with examples, read the README in the examples directory.  It includes two sample python scripts that use the
 irflow_client.
+
+### Documentation
+View our documentation [here](https://syncurity-irflow-sdk-python.readthedocs-hosted.com/en/latest/)
