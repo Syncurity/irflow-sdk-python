@@ -79,11 +79,11 @@ class IRFlowClient(object):
         self.session = requests.Session()
         # Set the X-Authorization header for all calls through the API
         # The rest of the headers are specified by the individual calls.
-        self.session.headers.update({'X-Authorization':  "{} {}".format(self.api_user, self.api_key)})
+        self.session.headers.update({'X-Authorization': "{} {}".format(self.api_user, self.api_key)})
 
     def _get_config_args_params(self, config_args):
         """Helper function to check/parse configuration arguments provided as a dict
-        
+
         Args:
             config_args (dict): A dict of the IR-Flow API parameters
                 Required:
