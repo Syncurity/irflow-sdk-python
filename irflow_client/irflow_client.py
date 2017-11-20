@@ -20,7 +20,7 @@ requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 
 class IRFlowClient(object):
-    """Python SDK for the IR-Flow REST API
+    """Python SDK for the IR-Flow REST API.
 
     """
     end_points = {
@@ -44,7 +44,8 @@ class IRFlowClient(object):
         'get_picklist_item': 'api/v1/picklist_items/%s',
         'restore_picklist_item': 'api/v1/picklist_items/%s/restore',
         'delete_picklist_item': 'api/v1/picklist_items/%s',
-        'object_type': 'api/v1/object_types'
+        'object_type': 'api/v1/object_types',
+        'version': '/api/v1/version'
     }
 
     def __init__(self, config_args=None, config_file=None, logger=None):
@@ -191,6 +192,18 @@ class IRFlowClient(object):
         print('\tProtocol: "%s"' % self.protocol)
         print('\tDebug: "%s"' % self.debug)
         print('\tVerbose: "%s"' % self.verbose)
+
+    def get_version(self):
+        """Function to get Current IR-Flow Version
+
+        Returns:
+            IR-Flow Version Number (str)"""
+
+        url = "%s://%s/%s" % (self.protocol, self.address, self.end_points['version'])
+        headers = {'Content-type': 'application/json'}
+
+        response = self.session.get(url, verify=False, headers=headers)
+        return str(response.json()['data']['version'])
 
     def close_alert(self, alert_num, close_reason):
         """Close the alert with the provided number, for the provided reason
