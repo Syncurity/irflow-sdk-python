@@ -19,6 +19,14 @@ irflowAPI = irflow_client.IRFlowClient(config_file="./api.conf")
 if irflowAPI.debug == "true":
     irflowAPI.dump_settings()
 
+print('=========== Get IR-Flow Version =========')
+try:
+    version = irflowAPI.get_version()
+except:
+    print('Something went wrong')
+
+print(version)
+
 print ('========== Create Object Type ==========')
 object_type = irflowAPI.create_object_type(type_name="createdByApi6", type_label="CreatedByAPi6", parent_type_name="alert")
 if object_type['success']:
