@@ -1,4 +1,4 @@
-requests
-sphinxcontrib-napoleon
-pypandoc
-pandoc
+requests>=2.18.4
+sphinxcontrib-napoleon=0.6.1
+pypandoc==1.4
+pandoc==1.0.2
