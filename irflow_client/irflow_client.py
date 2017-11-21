@@ -45,7 +45,7 @@ class IRFlowClient(object):
         'restore_picklist_item': 'api/v1/picklist_items/%s/restore',
         'delete_picklist_item': 'api/v1/picklist_items/%s',
         'object_type': 'api/v1/object_types',
-        'version': '/api/v1/version'
+        'version': 'api/v1/version'
     }
 
     def __init__(self, config_args=None, config_file=None):
