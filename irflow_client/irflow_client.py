@@ -89,13 +89,13 @@ class IRFlowClient(object):
         Args:
             config_args (dict): A dict of the IR-Flow API parameters
                 Required:
-                    "address":"IR-Flow Server FQDN or IP Address"
-                    "api_user":"IR-Flow API User"
-                    "api_key":"above user's api key"
+                    address (str): "IR-Flow Server FQDN or IP Address"
+                    api_user (str): "IR-Flow API User"
+                    api_key (str): "above user's api key"
                 Optional:
-                    "protocol":"https unless otherwise specified"
-                    "debug":"enable debug output, default = None"
-                    "verbose":"turn up the verbosity"
+                    protocol (str): "https unless otherwise specified"
+                    debug (bool): "enable debug output, default = None"
+                    verbose (int): "turn up the verbosity"
         """
 
         # Missing config checks done before class initializes in argparse
