@@ -18,6 +18,14 @@ setup(
     url='https://github.com/Syncurity/irflow-sdk-python',
     packages=['irflow_client'],
     install_requires=base_requirements,
+    extras_requires={
+        'dev': [
+            'sphinxcontrib-napoleon==0.6.1',
+            'pypandoc==1.4',
+            'pandoc==1.0.2',
+            'sphinx==1.6.5'
+        ]
+    },
     classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
