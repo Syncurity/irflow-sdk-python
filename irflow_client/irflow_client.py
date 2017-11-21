@@ -240,7 +240,8 @@ class IRFlowClient(object):
         """Function to get Current IR-Flow Version
 
         Returns:
-            IR-Flow Version Number (str)"""
+            str: IR-Flow Version Number.
+                Example: 4.6.0"""
 
         url = "%s://%s/%s" % (self.protocol, self.address, self.end_points['version'])
         headers = {'Content-type': 'application/json'}
