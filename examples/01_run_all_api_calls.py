@@ -1,17 +1,10 @@
-# Import the irflow_client module.
-import irflow_client
-
-# library used to create a unique value to pass to an IR Flow fact.
+""" Script to run all the API Calls using IR-Flow Client against an IR-Flow API endpoint"""
 import uuid
-
-# library used to generate a datetime
 import datetime
-
-# python logging bus - used for debug information
 import logging
 
-# library to used print json in a readable format
-import pprint
+import irflow_client
+
 
 # The first thing any script does is instantiate the irflow_api client library.
 # NOTE: We pass the configuration file to the library when we instatiate it.
@@ -43,7 +36,7 @@ if irflowAPI.debug:
 print('=========== Get IR-Flow Version =========')
 try:
     version = irflowAPI.get_version()
-except:
+except ConnectionError:
     print('Something went wrong')
 
 print(version)

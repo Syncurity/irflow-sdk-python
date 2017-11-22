@@ -1,5 +1,6 @@
+""" IR-Flow Client setup.py"""
+
 from setuptools import setup
-import datetime
 
 with open('requirements.txt') as f:
     base_requirements = f.read().splitlines()
