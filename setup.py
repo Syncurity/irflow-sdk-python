@@ -4,6 +4,9 @@ import datetime
 with open('requirements.txt') as f:
     base_requirements = f.read().splitlines()
 
+with open('requirements-dev.txt') as f:
+    dev_requirements = f.read().splitlines()
+
 setup(
     name='irflow_client',
     version=open('VERSION').read(),
@@ -20,20 +23,21 @@ setup(
     install_requires=base_requirements,
     extras_requires={
         'dev': [
-            'sphinxcontrib-napoleon==0.6.1',
-            'pypandoc==1.4',
-            'pandoc==1.0.2',
-            'sphinx==1.6.5'
+            dev_requirements
         ]
     },
     classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
-        'Topic :: Security',
+        'Operating System :: MacOS :: MacOS X',
+        'Operating System :: Microsoft :: Windows',
+        'Operating System :: POSIX',
+        'Platforms :: LINUX / MacOSX / Windows',
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.6',
+        'Topic :: Security',
     ]
 )

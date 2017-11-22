@@ -12,10 +12,15 @@
 ### Upgrade
 `pip install irflow_client --upgrade`
 
-### Build from source
-Only use for development
+### Build from source / install extra packages
+Clone the repo:
 ` git clone git@github.com:Syncurity/irflow-sdk-python.git`  
-`pip install -e .`
+
+For building docs locally:
+`sudo pip install irflow_client -e . dev`
+
+For running tests: (not implemented yet)
+`sudo pip install irflow_client -e . tests`
 
 ### Contribute
 Pull requests are always appreciated

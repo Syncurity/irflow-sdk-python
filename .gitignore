@@ -104,3 +104,5 @@ ENV/
 # Sensitive or high-churn files:
 .idea/*
 
+/.flooignore
+/.floo
