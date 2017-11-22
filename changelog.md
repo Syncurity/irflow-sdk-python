@@ -18,6 +18,7 @@ irflow-sdk-python changelog
     * Added get_version endpoint
     * added requirements.txt freeze,
     * created readthedocs site
-    * moved dev requirements to requirements-dev.txt
+    * moved dev requirements to requirements-dev.
+* v1.4.6
 
 
