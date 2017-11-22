@@ -1,1 +1,3 @@
-requests
+# Core packages needed
+
+requests>=2.18.4

@@ -1,6 +1,7 @@
-![PyPI](https://img.shields.io/badge/python-2.7-brightgreen.svg)
-![PyPI](https://img.shields.io/badge/python-3.6-brightgreen.svg)
-![PyPI](https://img.shields.io/badge/pypi-1.1.12-blue.svg)
+![PyPI1](https://img.shields.io/badge/python-2.7-brightgreen.svg)
+![PyPI2](https://img.shields.io/badge/python-3.6-brightgreen.svg)
+![PyPI3](https://img.shields.io/badge/pypi-1.2-blue.svg)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/47bf392599fb4d27931d4d1225e37835)](https://www.codacy.com?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Syncurity/irflow-sdk-python&amp;utm_campaign=Badge_Grade)
 
 # irflow-sdk-python
 
@@ -9,12 +10,18 @@
 ### Installation
 `pip install irflow_client`
 
-### Upgrade ###
+### Upgrade
 `pip install irflow_client --upgrade`
 
-### Build from source
+### Build from source / install extra packages
+Clone the repo:
 ` git clone git@github.com:Syncurity/irflow-sdk-python.git`  
-`pip install -e .`
+
+For building docs locally:
+`sudo pip install irflow_client -e . dev`
+
+For running tests: (not implemented yet)
+`sudo pip install irflow_client -e . tests`
 
 ### Contribute
 Pull requests are always appreciated
@@ -23,5 +30,11 @@ Pull requests are always appreciated
 Please open an issue in github
 
 ### Examples
-To get started with examples, read the README in the examples directory.  It includes two sample python scripts that use the
-irflow_client.
+To get started with examples, read the examples README.
+It includes two sample python scripts that use the irflow_client.
+
+### Documentation
+View our documentation [here](https://syncurity-irflow-sdk-python.readthedocs-hosted.com/en/latest/)
+
+### irflow_client API Documentation
+See the API functions [here](https://syncurity-irflow-sdk-python.readthedocs-hosted.com/en/dev/class.html#class)

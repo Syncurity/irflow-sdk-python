@@ -1,14 +1,10 @@
-# Import the irflow_client module.
+""" Script to run all the API Calls using IR-Flow Client against an IR-Flow API endpoint"""
+import uuid
+import datetime
+import logging
+
 import irflow_client
 
-# library used to create a unique value to pass to an IR Flow fact.
-import uuid
-
-# library used to generate a datetime
-import datetime
-
-# library to used print json in a readable format
-import pprint
 
 # The first thing any script does is instantiate the irflow_api client library.
 # NOTE: We pass the configuration file to the library when we instatiate it.
@@ -16,8 +12,34 @@ import pprint
 # irflow end point, user, and API Key, as well as the debug flag.
 
 irflowAPI = irflow_client.IRFlowClient(config_file="./api.conf")
-if irflowAPI.debug == "true":
+if irflowAPI.debug:
+    # If debug information is desired, create a simple logging config that sets the default
+    # lowest printed level to DEBUG
+    logging.basicConfig(level=logging.DEBUG)
+else:
+    # otherwise, use the standard configuration of the INFO level - these logging configurations can be made much
+    # more complex, but this sort of configuration is the minimum needed to get output on the console. If you're using
+    # the irflow-integrations package, a package wide logging configuration can be found in the
+    # irflow_integrations.utils submodule
+    logging.basicConfig(level=logging.INFO)
+
+# Once the logger has been configured, create the logger instance for this class. Even though the code in this example
+# uses only print statements for console output, a logging object must be made in order for the logging information from
+# the irflow_client object to be output
+logger = logging.getLogger('IR-Flow API Example')
+
+if irflowAPI.debug:
+    # Now that a logger has been created, we can dump the settings of the client if the debug flag is set, or skip this
+    # otherwise.
     irflowAPI.dump_settings()
+
+print('=========== Get IR-Flow Version =========')
+try:
+    version = irflowAPI.get_version()
+except ConnectionError:
+    print('Something went wrong')
+
+print(version)
 
 print ('========== Create Object Type ==========')
 object_type = irflowAPI.create_object_type(type_name="createdByApi6", type_label="CreatedByAPi6", parent_type_name="alert")
