@@ -24,9 +24,6 @@ import sys
 sys.path.insert(0, os.path.abspath('..'))
 sys.path.insert(0, os.path.abspath('../..'))
 can_auto_generate = False
-# -- Extensions to the  Napoleon GoogleDocstring class ---------------------
-
-from sphinx.ext.napoleon.docstring import GoogleDocstring
 
 try:
     from docs.source.generate_example_docs import generate_docs
@@ -210,6 +207,8 @@ if can_auto_generate:
         print('Failed to auto-generate example docs - ' + str(e))
 
 # -- Extensions to the  Napoleon GoogleDocstring class ---------------------
+
+from sphinx.ext.napoleon.docstring import GoogleDocstring
 
 # Title: Extensions to the Napoleon GoogleDocstring class
 # Author: Michael Goerz
