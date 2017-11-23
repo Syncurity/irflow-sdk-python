@@ -12,13 +12,16 @@ irflow-sdk-python changelog
 * v1.1.9 -  Fix requirements.txt build issue
 * v1.1.10 - Fix MANIFEST.in
 * v1.1.12 - Fix method attach_alert_to_incident (was the inverse)
-* v1.2 - Add docstrings to irflow_client for RTD build
-* v.1.4.5 - 
+* v1.2.0
+    * Add docstrings to irflow_client for RTD build 
     * Bump version to align with IR-Flow Version. 
     * Added get_version endpoint
     * added requirements.txt freeze,
     * created readthedocs site
     * moved dev requirements to requirements-dev.
-* v1.4.6
+
+
+* v1.4.5 - Reserved
+* v1.4.6 - Reserved
 
 
