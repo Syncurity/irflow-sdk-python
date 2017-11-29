@@ -2,7 +2,7 @@
 ![PyPI2](https://img.shields.io/badge/python-3.6-brightgreen.svg)
 ![PyPI3](https://img.shields.io/badge/pypi-1.2.0-blue.svg)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/47bf392599fb4d27931d4d1225e37835)](https://www.codacy.com?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Syncurity/irflow-sdk-python&amp;utm_campaign=Badge_Grade)
-
+[![Codacy Badge](https://api.codacy.com/project/badge/Coverage/47bf392599fb4d27931d4d1225e37835)](https://www.codacy.com?utm_source=github.com&utm_medium=referral&utm_content=Syncurity/irflow-sdk-python&utm_campaign=Badge_Coverage)
 # irflow-sdk-python
 
 ## A python client for Syncurity IR-Flow REST API
