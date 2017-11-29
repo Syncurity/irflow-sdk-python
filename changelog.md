@@ -19,6 +19,8 @@ irflow-sdk-python changelog
     * added requirements.txt freeze,
     * created readthedocs site
     * moved dev requirements to requirements-dev.
+* v1.2.1 Add testing
+* v1.2.2 Add requirements-dev.txt to MANIFEST
 
 
 
