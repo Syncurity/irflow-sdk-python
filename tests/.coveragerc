@@ -1,3 +1,4 @@
 [run]
+data_file = .coverage
 include = ../*
 omit = ~/Python3-prod/*, ../tests/*, /build. /dist

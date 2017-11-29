@@ -7,7 +7,7 @@ import pytest
 
 from irflow_client import IRFlowClient
 
-import test_data
+from . import test_data
 
 # Test Client Setup Error handling
 # def test_irfc_no_username():

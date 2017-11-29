@@ -48,7 +48,7 @@ except ConnectionError:
 
 print(version)
 
-print ('========== Create Object Type ==========')
+print('========== Create Object Type ==========')
 object_type = irflowAPI.create_object_type(type_name="createdByApi6", type_label="CreatedByAPi6", parent_type_name="alert")
 if object_type['success']:
     print("Created object_type with id" + str(object_type['data']['object_type']['id']))
