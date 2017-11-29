@@ -2,16 +2,23 @@
 import uuid
 import datetime
 import logging
+import os
 
 import irflow_client
 
 
 # The first thing any script does is instantiate the irflow_api client library.
-# NOTE: We pass the configuration file to the library when we instatiate it.
+# NOTE: We pass the configuration file to the library when we instantiate it.
 # The configuration file specifies the
 # irflow end point, user, and API Key, as well as the debug flag.
+config_file = "irflow_api.conf"
 
-irflowAPI = irflow_client.IRFlowClient(config_file="./api.conf")
+if os.path.exists(config_file):
+    # setup irflow Client
+    irflowAPI = irflow_client.IRFlowClient(config_file=config_file)
+else:
+    print('path to irflow_api.conf file is not found')
+
 if irflowAPI.debug:
     # If debug information is desired, create a simple logging config that sets the default
     # lowest printed level to DEBUG
