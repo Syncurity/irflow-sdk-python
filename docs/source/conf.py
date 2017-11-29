@@ -21,12 +21,14 @@ from sphinx.ext.napoleon.docstring import GoogleDocstring
 
 import os
 import sys
+
 sys.path.insert(0, os.path.abspath('..'))
 sys.path.insert(0, os.path.abspath('../..'))
 can_auto_generate = False
 
 try:
     from docs.source.generate_example_docs import generate_docs
+
     can_auto_generate = True
 except ImportError:
     print('Cannot import example documentation auto-generation functionality')
@@ -42,9 +44,9 @@ except ImportError:
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = ['sphinx.ext.autodoc',
-    'sphinx.ext.coverage',
-    'sphinx.ext.viewcode',
-    'sphinx.ext.napoleon']
+              'sphinx.ext.coverage',
+              'sphinx.ext.viewcode',
+              'sphinx.ext.napoleon']
 
 # Napoleon settings
 napoleon_google_docstring = True
@@ -104,7 +106,6 @@ pygments_style = 'sphinx'
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = False
 
-
 # -- Options for HTML output ----------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
@@ -138,12 +139,10 @@ html_sidebars = {
     ]
 }
 
-
 # -- Options for HTMLHelp output ------------------------------------------
 
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'SyncuritySDKdoc'
-
 
 # -- Options for LaTeX output ---------------------------------------------
 
@@ -173,7 +172,6 @@ latex_documents = [
      'Syncurity', 'manual'),
 ]
 
-
 # -- Options for manual page output ---------------------------------------
 
 # One entry per manual page. List of tuples
@@ -182,7 +180,6 @@ man_pages = [
     (master_doc, 'syncuritysdk', 'Syncurity SDK Documentation',
      [author], 1)
 ]
-
 
 # -- Options for Texinfo output -------------------------------------------
 
@@ -194,7 +191,6 @@ texinfo_documents = [
      author, 'SyncuritySDK', 'One line description of project.',
      'Miscellaneous'),
 ]
-
 
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {'https://docs.python.org/': None}
@@ -209,6 +205,7 @@ if can_auto_generate:
 # -- Extensions to the  Napoleon GoogleDocstring class ---------------------
 
 from sphinx.ext.napoleon.docstring import GoogleDocstring
+
 
 # Title: Extensions to the Napoleon GoogleDocstring class
 # Author: Michael Goerz

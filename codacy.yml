@@ -1,0 +1,15 @@
+---
+engines:
+  rubocop:
+    enabled: true
+  duplication:
+    enabled: true
+  metrics:
+    enabled: true
+  coverage:
+    enabled: true
+exclude_paths:
+  - '/irflow_integrations/__init__.py'
+  - 'docs/**'
+  - 'tests/**'
+  - '/_example/**'

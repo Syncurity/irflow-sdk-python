@@ -98,11 +98,28 @@ class IRFlowClient(object):
             verbose (int): turn up the verbosity default = 0 (optional)
         """
 
-        # Missing config checks done before class initializes in argparse
+        # Checking for missing config values
 
-        self.address = config_args['address']
-        self.api_user = config_args['api_user']
-        self.api_key = config_args['api_key']
+        if isinstance(config_args['address'], str):
+            self.address = config_args['address']
+        elif not config_args['address']:
+            raise KeyError('You have the wrong or missing key or value')
+        else:
+            raise KeyError('You have the wrong or missing key or value')
+
+        if isinstance(config_args['api_user'], str):
+            self.api_user = config_args['api_user']
+        elif not config_args['api_user']:
+            raise KeyError('You have the wrong or missing key or value')
+        else:
+            raise KeyError('You have the wrong or missing key or value')
+
+        if isinstance(config_args['api_key'], str):
+            self.api_key = config_args['api_key']
+        elif not config_args['api_key']:
+            raise KeyError('You have the wrong or missing key or value')
+        else:
+            raise KeyError('You have the wrong or missing key or value')
 
         if config_args['protocol']:
             self.protocol = config_args['protocol']
@@ -133,6 +150,7 @@ class IRFlowClient(object):
 
         # Make sure the Config File has the IRFlowAPI Section
         if not config.has_section('IRFlowAPI'):
+            print('Config file "{}" does not have the required section "[IRFlowAPI]"'.format(config_file))
             self.logger.error('Config file "{}" does not have the required section "[IRFlowAPI]"'.format(config_file))
             sys.exit()
 
@@ -162,6 +180,7 @@ class IRFlowClient(object):
 
         # If the required keys do not exist, then simply exit
         if missing_config:
+            print('Missing config')
             sys.exit()
 
         # Now set the configuration values on the self object.
