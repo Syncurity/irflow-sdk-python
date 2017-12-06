@@ -21,6 +21,7 @@ irflow-sdk-python changelog
     * moved dev requirements to requirements-dev.
 * v1.2.1 Add testing
 * v1.2.2 Add requirements-dev.txt to MANIFEST
+* v1.2.3 Move dump settings to debug, remove pprint, since it's supplied in json.dumps and requests.json()
 
 
 
