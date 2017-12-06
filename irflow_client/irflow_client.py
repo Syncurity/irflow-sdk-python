@@ -2,7 +2,6 @@
 
 """
 from json import dumps
-import pprint
 import logging
 import requests
 import sys
@@ -11,6 +10,7 @@ import tempfile
 try:
     import configparser
 except ImportError:
+    # py2 support
     import ConfigParser as configparser
 
 # The next to lines suppress the SSL Warning
@@ -55,8 +55,6 @@ class IRFlowClient(object):
              config_args (dict): Key, Value pairs of IR-Flow API configuration options
              config_file (str): Path to a valid Ir-Flow configuration file
         """
-        # Create a PrettyPrint object so we can dump JSon structures if debug = true.
-        self.pp = pprint.PrettyPrinter(indent=4)
 
         self.logger = logging.getLogger(__name__)
         self.logger.addHandler(logging.NullHandler())
@@ -158,20 +156,20 @@ class IRFlowClient(object):
         # Check for missing required configuration keys
         if not config.has_option('IRFlowAPI', 'address'):
             self.logger.error(
-                'Configuration File "{}" does not contain the "address" option in the [IRFlowAPI] '
-                'section'.format(config_file)
+                    'Configuration File "{}" does not contain the "address" option in the [IRFlowAPI] '
+                    'section'.format(config_file)
             )
             missing_config = True
         if not config.has_option('IRFlowAPI', 'api_user'):
             self.logger.error(
-                'Configuration File "{}" does not contain the "api_user" option in the [IRFlowAPI] '
-                'section'.format(config_file)
+                    'Configuration File "{}" does not contain the "api_user" option in the [IRFlowAPI] '
+                    'section'.format(config_file)
             )
             missing_config = True
         if not config.has_option('IRFlowAPI', 'api_key'):
             self.logger.error(
-                'Configuration File "{}" does not contain the "api_key" option in the [IRFlowAPI] '
-                'section'.format(config_file)
+                    'Configuration File "{}" does not contain the "api_key" option in the [IRFlowAPI] '
+                    'section'.format(config_file)
             )
             missing_config = True
 
@@ -207,19 +205,19 @@ class IRFlowClient(object):
     def dump_settings(self):
         """Helper function to print configuration information
         """
-        self.logger.info('Configuration Settings\n'
-                         '\tAddress: "{}"\n'
-                         '\tAPI_User: "{}"\n'
-                         '\tAPI_Key: "{}"\n'
-                         '\tProtocol: "{}"\n'
-                         '\tDebug: "{}"\n'
-                         '\tVerbose: "{}"'.format(self.address,
-                                                  self.api_user,
-                                                  self.api_key,
-                                                  self.protocol,
-                                                  self.debug,
-                                                  self.verbose)
-                         )
+        self.logger.debug('Configuration Settings\n'
+                          '\tAddress: "{}"\n'
+                          '\tAPI_User: "{}"\n'
+                          '\tAPI_Key: "{}"\n'
+                          '\tProtocol: "{}"\n'
+                          '\tDebug: "{}"\n'
+                          '\tVerbose: "{}"'.format(self.address,
+                                                   self.api_user,
+                                                   self.api_key,
+                                                   self.protocol,
+                                                   self.debug,
+                                                   self.verbose)
+                          )
 
     def dump_request_debug_info(self, heading, url, headers=None, data=None, params=None):
         """Helper function to dump request info to the debug stream on the logging bus
