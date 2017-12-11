@@ -19,6 +19,7 @@ jobs:
             pip install -r requirements.txt
             pip install pytest
             pip install pytest-cov
+            pip install awscli
       - save_cache:
           key: deps1-{{ .Branch }}-{{ checksum "requirements.txt" }}
           paths:
@@ -27,6 +28,7 @@ jobs:
           working_directory: tests
           command: |
             source ../venv/bin/activate
+            aws s3 cp s3://syncurity-ci/test_data.py .
             py.test --cov-report xml --cov-config .coveragerc --cov ../
       - store_artifacts:
           path: test-reports/
