@@ -6,6 +6,7 @@ import logging
 import requests
 import sys
 import tempfile
+import urllib3
 
 try:
     import configparser
@@ -14,9 +15,9 @@ except ImportError:
     import ConfigParser as configparser
 
 # The next to lines suppress the SSL Warning
-from requests.packages.urllib3.exceptions import InsecureRequestWarning
+from urllib3.exceptions import InsecureRequestWarning
 
-requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+urllib3.disable_warnings(InsecureRequestWarning)
 
 
 class IRFlowClient(object):

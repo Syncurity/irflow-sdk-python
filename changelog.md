@@ -22,7 +22,7 @@ irflow-sdk-python changelog
 * v1.2.1 Add testing
 * v1.2.2 Add requirements-dev.txt to MANIFEST
 * v1.2.3 Move dump settings to debug, remove pprint, since it's supplied in json.dumps and requests.json()
-
+* v1.2.4 Updated ignore ssl warning based on requests changes
 
 
 * v1.4.5 - Reserved
