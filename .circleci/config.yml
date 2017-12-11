@@ -1,5 +1,7 @@
 version: 2
 
+
+
 jobs:
   build:
     working_directory: ~/irflow_sdk_python
@@ -13,7 +15,7 @@ jobs:
       - run:
           command: |
             python3 -m venv venv
-            . venv/bin/activate
+            source venv/bin/activate
             pip install -r requirements.txt
             pip install pytest
       - save_cache:
