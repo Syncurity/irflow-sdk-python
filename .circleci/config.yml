@@ -2,7 +2,7 @@ version: 2
 
 jobs:
   build:
-    working_directory: ~/circleci-tests-python
+    working_directory: ~/irflow_sdk_python
     docker:
       - image: circleci/python:3.6.1
 
