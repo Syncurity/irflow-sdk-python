@@ -9,17 +9,6 @@ from irflow_client import IRFlowClient
 
 from . import test_data
 
-# Test Client Setup Error handling
-# def test_irfc_no_username():
-#     """Test for missing username (api_user)"""
-#     del config_args['api_user']
-#
-#     with pytest.raises(KeyError, message='Expecting no username error') as excinfo:
-#         IRFlowClient(config_args=config_args)
-#     exception_msg = excinfo.value.args[0]
-#     assert exception_msg == 'api_user'
-
-# Test data
 
 config_args = test_data.config_args
 config_args_missing_parameters = test_data.config_args_missing_parameters
@@ -27,17 +16,15 @@ config_args_to_try = test_data.config_args_to_try
 proofpoint_message = test_data.proofpoint_message
 
 
-@pytest.fixture(params=config_args_to_try)
-def config_args_generator(request):
-    """Returns config_args_to_try"""
-    return request.param
-
-
 @pytest.fixture(params=config_args_missing_parameters)
 def config_args_missing_params(request):
     """ Returns Missing Keys"""
     return request.param
 
+@pytest.fixture(params=config_args_to_try)
+def config_args_generator(request):
+    """Returns config_args_to_try"""
+    return request.param
 
 def test_irfc_init_missing_param(config_args_missing_params):
     """Using config_args_missing_params fixture"""
@@ -50,7 +37,7 @@ def test_irfc_init_missing_param(config_args_missing_params):
 def test_irfc_init(config_args_generator):
     """Using config_args_generator fixture"""
     # response = IRFlowClient(config_args_generator)
-    with pytest.raises(KeyError, message='Expecting no username error') as excinfo:
+    with pytest.raises(KeyError, message='Expecting Key Error') as excinfo:
         response = IRFlowClient(config_args_generator)
     exception_msg = excinfo.value.args[0]
     assert exception_msg == 'You have the wrong or missing key or value'
