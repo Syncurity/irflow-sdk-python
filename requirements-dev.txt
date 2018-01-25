@@ -3,4 +3,5 @@ sphinxcontrib-napoleon==0.6.1
 pypandoc==1.4
 pandoc==1.0.2
 wheel
-ytest
+pytest
+twine

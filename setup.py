@@ -32,7 +32,7 @@ setup(
     license=about['__license__'],
     packages=['irflow_client'],
     install_requires=base_requirements,
-    extras_requires={
+    extras_require={
         'dev': [
             dev_requirements
         ]
