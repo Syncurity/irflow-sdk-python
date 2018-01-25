@@ -32,8 +32,7 @@ jobs:
           command: |
             source ../venv/bin/activate
             aws s3 cp s3://syncurity-ci/test_data.py .
-            # py.test --cov-config .coveragerc --cov ../
-            python-codacy-coverage -r coverage.xml
+            # py.test --cov-report xml --cov-config .coveragerc --cov ../
             mkdir -p /tmp/artifacts
             cp coverage.xml /tmp/artifacts/coverage.xml
 
