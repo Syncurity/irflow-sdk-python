@@ -7,6 +7,7 @@ import requests
 import sys
 import tempfile
 import urllib3
+from .__version__ import __version__
 
 try:
     import configparser
@@ -78,130 +79,13 @@ class IRFlowClient(object):
 
         # Get a reusable session object.
         self.session = requests.Session()
+
+        # Set the User-Agent
+
+        self.session.headers.update({'User-Agent': IRFlowClient._build_user_agent()})
         # Set the X-Authorization header for all calls through the API
         # The rest of the headers are specified by the individual calls.
         self.session.headers.update({'X-Authorization': "{} {}".format(self.api_user, self.api_key)})
-
-    def _get_config_args_params(self, config_args):
-        """Helper function to check/parse configuration arguments provided as a dict
-
-        Args:
-            config_args (dict): A dict of the following keys:
-
-        Keys:
-            address (str): IR-Flow Server FQDN or IP Address
-            api_user (str): IR-Flow API User
-            api_key (str): above user's api key
-            protocol (str): https unless otherwise specified, default = HTTPS
-            debug (bool): enable debug output, default = None
-            verbose (int): turn up the verbosity default = 0 (optional)
-        """
-
-        # Checking for missing config values
-
-        if isinstance(config_args['address'], str):
-            self.address = config_args['address']
-        elif not config_args['address']:
-            raise KeyError('You have the wrong or missing key or value')
-        else:
-            raise KeyError('You have the wrong or missing key or value')
-
-        if isinstance(config_args['api_user'], str):
-            self.api_user = config_args['api_user']
-        elif not config_args['api_user']:
-            raise KeyError('You have the wrong or missing key or value')
-        else:
-            raise KeyError('You have the wrong or missing key or value')
-
-        if isinstance(config_args['api_key'], str):
-            self.api_key = config_args['api_key']
-        elif not config_args['api_key']:
-            raise KeyError('You have the wrong or missing key or value')
-        else:
-            raise KeyError('You have the wrong or missing key or value')
-
-        if config_args['protocol']:
-            self.protocol = config_args['protocol']
-        else:
-            self.protocol = 'https'
-        if config_args['debug']:
-            self.debug = config_args['debug']
-        else:
-            self.debug = False
-        try:
-            if config_args['verbose']:
-                self.verbose = int(config_args['verbose'])
-        except KeyError:
-            self.verbose = 1
-
-        # Dump Configuration if --debug
-        if self.debug:
-            self.dump_settings()
-
-    def _get_config_file_params(self, config_file):
-        """Helper function to parse configuration arguments from a valid IR-Flow configuration file
-
-        Args:
-            config_file (str): Path to a valid IR-Flow configuration file
-        """
-        config = configparser.ConfigParser()
-        config.read(config_file)
-
-        # Make sure the Config File has the IRFlowAPI Section
-        if not config.has_section('IRFlowAPI'):
-            print('Config file "{}" does not have the required section "[IRFlowAPI]"'.format(config_file))
-            self.logger.error('Config file "{}" does not have the required section "[IRFlowAPI]"'.format(config_file))
-            sys.exit()
-
-        missing_config = False
-        # Check for missing required configuration keys
-        if not config.has_option('IRFlowAPI', 'address'):
-            self.logger.error(
-                    'Configuration File "{}" does not contain the "address" option in the [IRFlowAPI] '
-                    'section'.format(config_file)
-            )
-            missing_config = True
-        if not config.has_option('IRFlowAPI', 'api_user'):
-            self.logger.error(
-                    'Configuration File "{}" does not contain the "api_user" option in the [IRFlowAPI] '
-                    'section'.format(config_file)
-            )
-            missing_config = True
-        if not config.has_option('IRFlowAPI', 'api_key'):
-            self.logger.error(
-                    'Configuration File "{}" does not contain the "api_key" option in the [IRFlowAPI] '
-                    'section'.format(config_file)
-            )
-            missing_config = True
-
-        # Do not need to check for protocol, it is optional.  Will assume https if missing.
-        # Do not need to check for debug, it is optional.  Will assume False if missing.
-
-        # If the required keys do not exist, then simply exit
-        if missing_config:
-            print('Missing config')
-            sys.exit()
-
-        # Now set the configuration values on the self object.
-        self.address = config.get('IRFlowAPI', 'address')
-        self.api_user = config.get('IRFlowAPI', 'api_user')
-        self.api_key = config.get('IRFlowAPI', 'api_key')
-        if config.has_option('IRFlowAPI', 'protocol'):
-            self.protocol = config.get('IRFlowAPI', 'protocol')
-        else:
-            self.protocol = 'https'
-        if config.has_option('IRFlowAPI', 'debug'):
-            self.debug = config.getboolean('IRFlowAPI', 'debug')
-        else:
-            self.debug = False
-        if config.has_option('IRFlowAPI', 'verbose'):
-            self.verbose = int(config.get('IRFlowAPI', 'verbose'))
-        else:
-            self.verbose = 1
-
-        # Dump Configuration if --debug
-        if self.debug:
-            self.dump_settings()
 
     def dump_settings(self):
         """Helper function to print configuration information
@@ -1012,3 +896,134 @@ class IRFlowClient(object):
             if field['field']['field_name'] == field_name:
                 return field
         return None
+
+    @staticmethod
+    def _build_user_agent():
+        """Builds the current version User-Agent String
+
+        Returns:
+            str: user-agent
+        """
+
+        return "IR-Flow-Client / {0}(Python {1}; en-us".format(__version__, sys.version.split(' ')[0])
+
+    def _get_config_args_params(self, config_args):
+        """Helper function to check/parse configuration arguments provided as a dict
+
+        Args:
+            config_args (dict): A dict of the following keys:
+
+        Keys:
+            address (str): IR-Flow Server FQDN or IP Address
+            api_user (str): IR-Flow API User
+            api_key (str): above user's api key
+            protocol (str): https unless otherwise specified, default = HTTPS
+            debug (bool): enable debug output, default = None
+            verbose (int): turn up the verbosity default = 0 (optional)
+        """
+
+        # Checking for missing config values
+
+        if isinstance(config_args['address'], str):
+            self.address = config_args['address']
+        elif not config_args['address']:
+            raise KeyError('You have the wrong or missing key or value')
+        else:
+            raise KeyError('You have the wrong or missing key or value')
+
+        if isinstance(config_args['api_user'], str):
+            self.api_user = config_args['api_user']
+        elif not config_args['api_user']:
+            raise KeyError('You have the wrong or missing key or value')
+        else:
+            raise KeyError('You have the wrong or missing key or value')
+
+        if isinstance(config_args['api_key'], str):
+            self.api_key = config_args['api_key']
+        elif not config_args['api_key']:
+            raise KeyError('You have the wrong or missing key or value')
+        else:
+            raise KeyError('You have the wrong or missing key or value')
+
+        if config_args['protocol']:
+            self.protocol = config_args['protocol']
+        else:
+            self.protocol = 'https'
+        if config_args['debug']:
+            self.debug = config_args['debug']
+        else:
+            self.debug = False
+        try:
+            if config_args['verbose']:
+                self.verbose = int(config_args['verbose'])
+        except KeyError:
+            self.verbose = 1
+
+        # Dump Configuration if --debug
+        if self.debug:
+            self.dump_settings()
+
+    def _get_config_file_params(self, config_file):
+        """Helper function to parse configuration arguments from a valid IR-Flow configuration file
+
+        Args:
+            config_file (str): Path to a valid IR-Flow configuration file
+        """
+        config = configparser.ConfigParser()
+        config.read(config_file)
+
+        # Make sure the Config File has the IRFlowAPI Section
+        if not config.has_section('IRFlowAPI'):
+            print('Config file "{}" does not have the required section "[IRFlowAPI]"'.format(config_file))
+            self.logger.error('Config file "{}" does not have the required section "[IRFlowAPI]"'.format(config_file))
+            sys.exit()
+
+        missing_config = False
+        # Check for missing required configuration keys
+        if not config.has_option('IRFlowAPI', 'address'):
+            self.logger.error(
+                    'Configuration File "{}" does not contain the "address" option in the [IRFlowAPI] '
+                    'section'.format(config_file)
+            )
+            missing_config = True
+        if not config.has_option('IRFlowAPI', 'api_user'):
+            self.logger.error(
+                    'Configuration File "{}" does not contain the "api_user" option in the [IRFlowAPI] '
+                    'section'.format(config_file)
+            )
+            missing_config = True
+        if not config.has_option('IRFlowAPI', 'api_key'):
+            self.logger.error(
+                    'Configuration File "{}" does not contain the "api_key" option in the [IRFlowAPI] '
+                    'section'.format(config_file)
+            )
+            missing_config = True
+
+        # Do not need to check for protocol, it is optional.  Will assume https if missing.
+        # Do not need to check for debug, it is optional.  Will assume False if missing.
+
+        # If the required keys do not exist, then simply exit
+        if missing_config:
+            print('Missing config')
+            sys.exit()
+
+        # Now set the configuration values on the self object.
+        self.address = config.get('IRFlowAPI', 'address')
+        self.api_user = config.get('IRFlowAPI', 'api_user')
+        self.api_key = config.get('IRFlowAPI', 'api_key')
+        if config.has_option('IRFlowAPI', 'protocol'):
+            self.protocol = config.get('IRFlowAPI', 'protocol')
+        else:
+            self.protocol = 'https'
+        if config.has_option('IRFlowAPI', 'debug'):
+            self.debug = config.getboolean('IRFlowAPI', 'debug')
+        else:
+            self.debug = False
+        if config.has_option('IRFlowAPI', 'verbose'):
+            self.verbose = int(config.get('IRFlowAPI', 'verbose'))
+        else:
+            self.verbose = 1
+
+        # Dump Configuration if --debug
+        if self.debug:
+            self.dump_settings()
