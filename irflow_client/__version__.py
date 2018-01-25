@@ -1,4 +1,4 @@
-# Syncurity IR-Flow Integrations
+"""Syncurity IR-Flow SDK Version File"""
 
 __title__ = 'irflow-sdk-python'
 __description__ = 'A python client for Syncurity IR-Flow'

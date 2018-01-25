@@ -1,5 +1,6 @@
 """ IR-Flow Client setup.py"""
 
+from codecs import open
 from setuptools import setup
 import os
 
