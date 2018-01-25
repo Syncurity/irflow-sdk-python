@@ -81,7 +81,7 @@ class IRFlowClient(object):
         self.session = requests.Session()
 
         # Set timeout on (connect, read) timeouts
-        self.session.timeout(5, 30)
+        self.session.timeout=(5, 30)
         # Set the User-Agent
         self.session.headers.update({'User-Agent': IRFlowClient._build_user_agent()})
 
