@@ -1,3 +1,4 @@
 # Created by .ignore support plugin (hsz.mobi)
 test_data.py
 /.coverage
+coverage.xml
