@@ -80,9 +80,11 @@ class IRFlowClient(object):
         # Get a reusable session object.
         self.session = requests.Session()
 
+        # Set timeout on (connect, read) timeouts
+        self.session.timeout(5, 30)
         # Set the User-Agent
-
         self.session.headers.update({'User-Agent': IRFlowClient._build_user_agent()})
+
         # Set the X-Authorization header for all calls through the API
         # The rest of the headers are specified by the individual calls.
         self.session.headers.update({'X-Authorization': "{} {}".format(self.api_user, self.api_key)})
