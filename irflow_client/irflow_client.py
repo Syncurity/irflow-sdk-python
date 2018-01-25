@@ -53,6 +53,8 @@ class IRFlowClient(object):
     def __init__(self, config_args=None, config_file=None):
         """Create an API Client instance
 
+        Creates API Client to IR-Flow API. Default timeout is 5 seconds on connect and 30 seconds on response.
+
         Args:
              config_args (dict): Key, Value pairs of IR-Flow API configuration options
              config_file (str): Path to a valid Ir-Flow configuration file

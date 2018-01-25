@@ -3,7 +3,7 @@
 __title__ = 'irflow-sdk-python'
 __description__ = 'A python client for Syncurity IR-Flow'
 __url__ = 'https://syncurity.net'
-__version__ = '1.2.4'
+__version__ = '1.5.0'
 __build__ = ''
 __author__ = 'Syncurity'
 __author_email__ = 'support@syncurity.net'
