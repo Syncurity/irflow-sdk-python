@@ -25,4 +25,5 @@ irflow-sdk-python changelog
 * v1.2.4 Updated ignore ssl warning based on requests changes
 * v1.5.0 Added session timeout values, and dynamic version based user-agent string
 * v1.5.1 Fix requirements typos
+* v1.5.2 Readme.md updates for Py2 and Py3 examples
 
