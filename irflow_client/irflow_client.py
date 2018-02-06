@@ -909,7 +909,7 @@ class IRFlowClient(object):
             str: user-agent
         """
 
-        return "IR-Flow-Client / {0}(Python {1}; en-us".format(__version__, sys.version.split(' ')[0])
+        return "IR-Flow-Client / {0} (Python {1}; en-us)".format(__version__, sys.version.split(' ')[0])
 
     def _get_config_args_params(self, config_args):
         """Helper function to check/parse configuration arguments provided as a dict
