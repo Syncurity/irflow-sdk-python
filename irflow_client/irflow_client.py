@@ -170,8 +170,8 @@ class IRFlowClient(object):
 
         if response.status_code == 503:
             raise IRFlowMaintenanceError('IR-Flow Server is down for maintenance')
-        else:
-            return str(response.json()['data']['version'])
+
+        return str(response.json()['data']['version'])
 
     def close_alert(self, alert_num, close_reason):
         """Close the alert with the provided number, for the provided reason
