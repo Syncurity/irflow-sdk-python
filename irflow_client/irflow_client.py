@@ -4,6 +4,7 @@
 from json import dumps
 import logging
 import requests
+import os
 import sys
 import tempfile
 import urllib3
@@ -22,9 +23,12 @@ urllib3.disable_warnings(InsecureRequestWarning)
 
 
 class IRFlowClientConfigError(Exception):
+    """Raised on Config Errors"""
     pass
 
+
 class IRFlowMaintenanceError(Exception):
+    """Raised on HTTP 503 from IR-Flow App, likely being upgraded."""
     pass
 
 
@@ -66,7 +70,7 @@ class IRFlowClient(object):
              config_args (dict): Key, Value pairs of IR-Flow API configuration options
              config_file (str): Path to a valid Ir-Flow configuration file
         """
-
+        self.circle_ci = os.environ.get('CI', False)
         self.logger = logging.getLogger(__name__)
         self.logger.addHandler(logging.NullHandler())
         # Make sure we have config info we need
@@ -98,7 +102,8 @@ class IRFlowClient(object):
         # The rest of the headers are specified by the individual calls.
         self.session.headers.update({'X-Authorization': "{} {}".format(self.api_user, self.api_key)})
 
-        self.version = self.get_version()
+        if not self.circle_ci:
+            self.version = self.get_version()
 
     def dump_settings(self):
         """Helper function to print configuration information
