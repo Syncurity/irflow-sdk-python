@@ -66,24 +66,24 @@ def irfc():
 #     assert response == '5.1'
 
 
-@pytest.mark.create_alert
-def test_create_get_alert(irfc):
-    # test that we an create an alert
-    response = irfc.create_alert(proofpoint_message['fields'],
-                                 proofpoint_message['description'],
-                                 proofpoint_message['data_field_group_name'])
-    assert response['success']
-    assert response['exception'] is None
-    assert response['errorCode'] is None
-    assert 'Alert Created!' in response['message']
-    assert isinstance(response['data']['alert'], dict)
-    assert isinstance(response['data']['alert']['id'], int)
-
-    alert_id = response['data']['alert']['id']
-    next_response = irfc.get_alert(alert_num=alert_id)
-    assert next_response['success']
-    assert next_response['exception'] is None
-    assert next_response['errorCode'] is None
-    assert 'Alert found.' in next_response['message']
-    assert isinstance(next_response['data']['alert'], dict)
-    assert isinstance(next_response['data']['alert']['id'], int)
+# @pytest.mark.create_alert
+# def test_create_get_alert(irfc):
+#     # test that we an create an alert
+#     response = irfc.create_alert(proofpoint_message['fields'],
+#                                  proofpoint_message['description'],
+#                                  proofpoint_message['data_field_group_name'])
+#     assert response['success']
+#     assert response['exception'] is None
+#     assert response['errorCode'] is None
+#     assert 'Alert Created!' in response['message']
+#     assert isinstance(response['data']['alert'], dict)
+#     assert isinstance(response['data']['alert']['id'], int)
+#
+#     alert_id = response['data']['alert']['id']
+#     next_response = irfc.get_alert(alert_num=alert_id)
+#     assert next_response['success']
+#     assert next_response['exception'] is None
+#     assert next_response['errorCode'] is None
+#     assert 'Alert found.' in next_response['message']
+#     assert isinstance(next_response['data']['alert'], dict)
+#     assert isinstance(next_response['data']['alert']['id'], int)
