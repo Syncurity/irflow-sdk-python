@@ -27,4 +27,8 @@ irflow-sdk-python changelog
 * v1.5.1 Fix requirements typos
 * v1.5.2 Readme.md updates for Py2 and Py3 examples
 * v1.5.3 Fix User Agent typo
+* v1.5.4 remove sys.exit()
+    * Fix CI workflow
+    * detect http 503 (IR-Flow Offline)
+    * fix debug logging 
 
