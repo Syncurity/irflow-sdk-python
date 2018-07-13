@@ -4,6 +4,7 @@
 from json import dumps
 import logging
 import requests
+import os
 import sys
 import tempfile
 import urllib3
@@ -19,6 +20,16 @@ except ImportError:
 from urllib3.exceptions import InsecureRequestWarning
 
 urllib3.disable_warnings(InsecureRequestWarning)
+
+
+class IRFlowClientConfigError(Exception):
+    """Raised on Config Errors"""
+    pass
+
+
+class IRFlowMaintenanceError(Exception):
+    """Raised on HTTP 503 from IR-Flow App, likely being upgraded."""
+    pass
 
 
 class IRFlowClient(object):
@@ -59,7 +70,7 @@ class IRFlowClient(object):
              config_args (dict): Key, Value pairs of IR-Flow API configuration options
              config_file (str): Path to a valid Ir-Flow configuration file
         """
-
+        self.circle_ci = os.environ.get('CI', False)
         self.logger = logging.getLogger(__name__)
         self.logger.addHandler(logging.NullHandler())
         # Make sure we have config info we need
@@ -90,6 +101,9 @@ class IRFlowClient(object):
         # Set the X-Authorization header for all calls through the API
         # The rest of the headers are specified by the individual calls.
         self.session.headers.update({'X-Authorization': "{} {}".format(self.api_user, self.api_key)})
+
+        if not self.circle_ci:
+            self.version = self.get_version()
 
     def dump_settings(self):
         """Helper function to print configuration information
@@ -142,7 +156,7 @@ class IRFlowClient(object):
                           'HTTP Status: "{}"\n'
                           'Response JSON:\n{}'.format(heading, status, dumps(json, indent=2)))
 
-    def get_version(self):
+    def get_version(self, ):
         """Function to get Current IR-Flow Version
 
         Returns:
@@ -153,6 +167,10 @@ class IRFlowClient(object):
         headers = {'Content-type': 'application/json'}
 
         response = self.session.get(url, verify=False, headers=headers)
+
+        if response.status_code == 503:
+            raise IRFlowMaintenanceError('IR-Flow Server is down for maintenance')
+
         return str(response.json()['data']['version'])
 
     def close_alert(self, alert_num, close_reason):
@@ -302,7 +320,9 @@ class IRFlowClient(object):
                 handle.write(block)
 
         if self.debug:
-            self.dump_response_debug_info('Download Attachment', response.status_code, response.json())
+            self.dump_response_debug_info('Download Attachment', response.status_code, {"response": response.status_code})
+
+        print('done')
 
     def download_attachment_string(self, attachment_id):
         """Download an attachment and return it as text
@@ -974,42 +994,43 @@ class IRFlowClient(object):
             config_file (str): Path to a valid IR-Flow configuration file
         """
         config = configparser.ConfigParser()
+
         config.read(config_file)
 
         # Make sure the Config File has the IRFlowAPI Section
         if not config.has_section('IRFlowAPI'):
-            print('Config file "{}" does not have the required section "[IRFlowAPI]"'.format(config_file))
             self.logger.error('Config file "{}" does not have the required section "[IRFlowAPI]"'.format(config_file))
-            sys.exit()
+            raise IRFlowClientConfigError('Config file "{}" does not have the required section "[IRFlowAPI]"'
+                                          .format(config_file))
 
-        missing_config = False
+        missing_options = []
         # Check for missing required configuration keys
         if not config.has_option('IRFlowAPI', 'address'):
             self.logger.error(
                     'Configuration File "{}" does not contain the "address" option in the [IRFlowAPI] '
                     'section'.format(config_file)
             )
-            missing_config = True
+            missing_options.append('address')
         if not config.has_option('IRFlowAPI', 'api_user'):
             self.logger.error(
                     'Configuration File "{}" does not contain the "api_user" option in the [IRFlowAPI] '
                     'section'.format(config_file)
             )
-            missing_config = True
+            missing_options.append('api_user')
         if not config.has_option('IRFlowAPI', 'api_key'):
             self.logger.error(
                     'Configuration File "{}" does not contain the "api_key" option in the [IRFlowAPI] '
                     'section'.format(config_file)
             )
-            missing_config = True
+            missing_options.append('api_key')
 
         # Do not need to check for protocol, it is optional.  Will assume https if missing.
         # Do not need to check for debug, it is optional.  Will assume False if missing.
 
         # If the required keys do not exist, then simply exit
-        if missing_config:
-            print('Missing config')
-            sys.exit()
+        if len(missing_options) > 0:
+            self.logger.error('Missing configuration sections: {0}'.format(", ".join(missing_options)))
+            raise IRFlowClientConfigError('Missing configuration sections: {0}'.format(", ".join(missing_options)))
 
         # Now set the configuration values on the self object.
         self.address = config.get('IRFlowAPI', 'address')
