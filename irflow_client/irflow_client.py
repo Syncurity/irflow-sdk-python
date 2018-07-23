@@ -528,7 +528,7 @@ class IRFlowClient(object):
         return response.json()
 
     def update_incident(self, incident_num, incident_fields, incident_type_name, incident_subtype_name=None,
-                        description=None):
+                        description=None, parameters=None):
         """Update the incident of the provided number, type, and subtype with the provided fields and description
 
         Args:
@@ -546,6 +546,7 @@ class IRFlowClient(object):
         params = {
             'fields': incident_fields,
             'incident_type_name': incident_type_name,
+            **parameters
         }
         headers = {
             'Content-type': 'application/json',

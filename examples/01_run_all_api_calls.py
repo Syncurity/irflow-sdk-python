@@ -241,10 +241,13 @@ print('========== Update Incident ==========')
 # Update set-up the Incident data we want to use to update this Incident.
 incident_fields = {'time_remediated': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
 description = 'Super Bad API Incident - Remediated'  # The Alert Description
+parameters = {
+    'owner_id': 1
+}
 # Call the irflow_api method to update an Incident.
 # NOTE: irflowAPI is the object we created from the irflow_client.  This is how all methods are called.
 # The call returns a json data structure (a dictionary in python)
-incident_data = irflowAPI.update_incident(incident_num, incident_fields, incident_type_name, incident_subtype_name=incident_subtype_name, description=description)
+incident_data = irflowAPI.update_incident(incident_num, incident_fields, incident_type_name, incident_subtype_name=incident_subtype_name, description=description, parameters=parameters)
 
 if incident_data['success']:
     print("Update Incident: Success")
