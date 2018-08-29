@@ -536,7 +536,7 @@ class IRFlowClient(object):
             incident_fields (dict): Key, Value pairs of fields configured in IR-Flow and their values
             incident_type_name (str): The string name of the incident type of the desired incident
             owner_id (int): The id of the user that will own this incident
-            group_ids ([]int): The ids of the groups this incident will belong to.
+            group_ids (list of int): The ids of the groups this incident will belong to.
             incident_subtype_name (str): The string name of the incident subtype of the desired incident (optional)
             description (str): An optional string description for the incident
 
