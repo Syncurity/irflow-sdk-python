@@ -7,7 +7,7 @@ __version__ = '1.5.3'
 __build__ = ''
 __author__ = 'Syncurity'
 __author_email__ = 'support@syncurity.net'
-__license__ = 'Commercial'
+__license__ = 'Apache 2.0'
 __copyright__ = 'Copyright 2018 Syncurity'
 __cake__ = u''
 
