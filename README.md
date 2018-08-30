@@ -1,3 +1,4 @@
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 ![PyPI3](https://img.shields.io/badge/pypi-1.5.3-blue.svg)
 ![PyPI1](https://img.shields.io/badge/python-2.7+-brightgreen.svg)
 ![PyPI2](https://img.shields.io/badge/python-3.6+-brightgreen.svg)
