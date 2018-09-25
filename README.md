@@ -15,8 +15,8 @@ Python2: `pip install irflow_client`
 Python3: `pip3 install irflow_client`
 
 ### Installation in Edit Mode for Development
-Python2: `pip install irflow_client -e .`
-Python3: `pip3 install irflow_client -e .`
+Python2: `pip install -e .`
+Python3: `pip3 install -e .`
 
 ### Upgrade
 Python2: `pip install irflow_client --upgrade`

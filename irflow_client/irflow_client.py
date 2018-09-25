@@ -527,7 +527,7 @@ class IRFlowClient(object):
 
         return response.json()
 
-    def update_incident(self, incident_num, incident_fields, incident_type_name, incident_subtype_name=None,
+    def update_incident(self, incident_num, incident_fields, incident_type_name, owner_id, group_ids, incident_subtype_name=None,
                         description=None):
         """Update the incident of the provided number, type, and subtype with the provided fields and description
 
@@ -535,6 +535,8 @@ class IRFlowClient(object):
             incident_num (int): The IR-Flow assigned ID of the incident to update
             incident_fields (dict): Key, Value pairs of fields configured in IR-Flow and their values
             incident_type_name (str): The string name of the incident type of the desired incident
+            owner_id (int): The id of the user that will own this incident
+            group_ids (list of int): The ids of the groups this incident will belong to.
             incident_subtype_name (str): The string name of the incident subtype of the desired incident (optional)
             description (str): An optional string description for the incident
 
@@ -546,6 +548,8 @@ class IRFlowClient(object):
         params = {
             'fields': incident_fields,
             'incident_type_name': incident_type_name,
+            'owner_id': owner_id,
+            'group_ids': group_ids
         }
         headers = {
             'Content-type': 'application/json',
