@@ -13,8 +13,10 @@ Need the following packages:
     ```cd tests```
     run:
     ```py.test --cov-report xml --cov-config .coveragerc --cov ../```
+
 * To view coverage reports:
     ```coverage report```
+
 # If you are sending this up to codacy for coverage reporting:
     ```export CODACY_PROJECT_TOKEN=<project_token>```
     ```python-codacy-coverage -r coverage.xml```

@@ -31,7 +31,9 @@ setup(
     keywords='Syncurity syncurity IR-Flow ir-flow irflow security incident response',
     license=about['__license__'],
     packages=['irflow_client'],
+    platforms=['Windows', 'MacOS', 'Enterprise Linux'],
     install_requires=base_requirements,
+    python_requires='>=2.7, >=3.6',
     extras_require={
         'dev': [
             dev_requirements
@@ -48,6 +50,6 @@ setup(
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.6',
-        'Topic :: Security',
+        'Topic :: Security'
     ]
 )
