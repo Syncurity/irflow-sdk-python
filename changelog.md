@@ -31,4 +31,5 @@ irflow-sdk-python changelog
     * Fix CI workflow
     * detect http 503 (IR-Flow Offline)
     * fix debug logging 
-
+    * Fix update_incident function to added owner and group IDs
+    * Converted to Apache 2.0 license
