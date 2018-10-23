@@ -1,5 +1,5 @@
 # Packages for building read the docs documentation and release building
--i https://pypi.org/simple
+# -i https://pypi.org/simple
 atomicwrites==1.2.1
 attrs==18.2.0
 bleach==3.0.2
