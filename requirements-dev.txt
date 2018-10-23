@@ -1,8 +1,38 @@
-# Packages for building read the docs documentation
-sphinxcontrib-napoleon==0.6.1
-pypandoc==1.4
+# Packages for building read the docs documentation and release building
+-i https://pypi.org/simple
+atomicwrites==1.2.1
+attrs==18.2.0
+bleach==3.0.2
+certifi==2018.10.15
+cffi==1.11.5
+chardet==3.0.4
+cmarkgfm==0.4.2
+codacy-coverage==1.3.11
+coverage==4.5.1
+docutils==0.14
+future==0.16.0
+idna==2.7
+more-itertools==4.3.0
 pandoc==1.0.2
-requests_mock
-wheel
-pytest
-twine
+pkginfo==1.4.2
+pluggy==0.8.0
+ply==3.11
+pockets==0.7.2
+py==1.7.0pipenv check
+pycparser==2.19
+pygments==2.2.0
+pypandoc==1.4
+pytest-cov==2.6.0
+pytest==3.9.2
+readme-renderer==22.0
+requests-mock==1.5.2
+requests-toolbelt==0.8.0
+requests==2.20.0
+six==1.11.0
+sphinxcontrib-napoleon==0.6.1
+tqdm==4.28.1
+twine==1.12.1
+urllib3==1.24
+webencodings==0.5.1
+wheel==0.32.2
+

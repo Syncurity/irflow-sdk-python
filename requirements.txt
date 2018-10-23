@@ -1,6 +1,6 @@
-urllib3
-# Core packages needed
-
-requests>=2.18.4
-
-# Need to create requirements-test
+-i https://pypi.org/simple
+certifi==2018.10.15
+chardet==3.0.4
+idna==2.7
+requests==2.20.0
+urllib3==1.24
