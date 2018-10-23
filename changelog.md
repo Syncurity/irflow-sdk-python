@@ -33,5 +33,6 @@ irflow-sdk-python changelog
     * fix debug logging 
     * Fix update_incident function to added owner and group IDs
     * Converted to Apache 2.0 license
-* v1.5.5 Release under Apache2.0 License
+* v1.5.5 Test build
+* v1.5.6 Release under Apache2.0 License
     * Update requests==2.20.0 to patch CVE-2018-18074
