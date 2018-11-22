@@ -1,5 +1,6 @@
 # Syncurity Package ignore
 /examples/api.conf
+.pypirc
 
 
 # editor / pythonic ignores
