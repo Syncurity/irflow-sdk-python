@@ -33,7 +33,7 @@ setup(
     packages=['irflow_client'],
     platforms=['Windows', 'MacOS', 'Enterprise Linux'],
     install_requires=base_requirements,
-    python_requires='>=2.7, >=3.6',
+    python_requires='>=2.7.*, >=3.6',
     extras_require={
         'dev': [
             dev_requirements
@@ -46,7 +46,6 @@ setup(
         'Operating System :: Microsoft :: Windows',
         'Operating System :: POSIX',
         'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.6',

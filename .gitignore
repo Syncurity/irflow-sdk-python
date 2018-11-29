@@ -1,6 +1,7 @@
 # Syncurity Package ignore
 /examples/api.conf
-
+.pypirc
+.DS_Store
 
 # editor / pythonic ignores
 # Byte-compiled / optimized / DLL files
