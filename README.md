@@ -12,8 +12,10 @@
 ## A python client for Syncurity IR-Flow REST API
 
 ### Documentation
+View our documentation [here](https://syncurity-irflow-sdk-python.readthedocs-hosted.com/en/latest/)
 
-[Checkout the docs.](https://readthedocs.com/projects/syncurity-irflow-sdk-python/badge/?version=latest)
+### API Documentation
+See the API functions [here](https://syncurity-irflow-sdk-python.readthedocs-hosted.com/en/latest/class.html#class)
 
 ### Installation To Use in Production
 Python2: `pip install irflow_client`
@@ -47,9 +49,3 @@ Please open an issue in github
 ### Examples
 To get started with examples, read the examples README.
 It includes two sample python scripts that use the irflow_client.
-
-### Documentation
-View our documentation [here](https://syncurity-irflow-sdk-python.readthedocs-hosted.com/en/latest/)
-
-### irflow_client API Documentation
-See the API functions [here](https://syncurity-irflow-sdk-python.readthedocs-hosted.com/en/dev/class.html#class)
