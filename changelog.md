@@ -37,3 +37,4 @@ irflow-sdk-python changelog
 * v1.5.6 Release under Apache2.0 License
     * Update requests==2.20.0 to patch CVE-2018-18074
 * v1.5.7 Update .gitignore, bump requirements.txt
+* v1.5.8 Fix python_requires for pip 18.0+
