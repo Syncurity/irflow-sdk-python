@@ -954,20 +954,6 @@ class IRFlowClient(object):
 
         if isinstance(config_args['address'], str):
             self.address = config_args['address']
-        elif 'proxy_user' in config_args and \
-                'proxy_pass' in config_args and \
-                ('http_proxy' in config_args or 'https_proxy' in config_args):
-            auth_string = config_args['proxy_user'] + ':' + config_args['proxy_pass'] + '@'
-            proxy = None
-            if 'http_proxy' in config_args:
-                proxy = config_args['http_proxy']
-                if 'http_proxy_port' in config_args:
-                    proxy += ':' + config_args['http_proxy_port']
-            elif 'https_proxy' in config_args:
-                proxy = config_args['https_proxy']
-                if 'https_proxy_port' in config_args:
-                    proxy += ':' + config_args['https_proxy_port']
-            self.address = 'https://{0}'.format(auth_string) + proxy
         elif not config_args['address']:
             raise KeyError('You have the wrong or missing key or value')
         else:
@@ -1023,10 +1009,7 @@ class IRFlowClient(object):
 
         missing_options = []
         # Check for missing required configuration keys
-        if not config.has_option('IRFlowAPI', 'address') and \
-                not config.has_option('IRFlowAPI', 'proxy_user') and \
-                not config.has_option('IRFlowAPI', 'proxy_pass') and \
-                not (config.has_option('IRFlowAPI', 'http_proxy') or config.has_option('IRFlowAPI', 'https_proxy')):
+        if not config.has_option('IRFlowAPI', 'address'):
             self.logger.error(
                     'Configuration File "{}" does not contain the "address" option in the [IRFlowAPI] '
                     'section'.format(config_file)
@@ -1054,22 +1037,7 @@ class IRFlowClient(object):
             raise IRFlowClientConfigError('Missing configuration sections: {0}'.format(", ".join(missing_options)))
 
         # Now set the configuration values on the self object.
-        if config.has_option('IRFlowAPI', 'proxy_user') and \
-                config.has_option('IRFlowAPI', 'proxy_pass') and \
-                (config.has_option('IRFlowAPI', 'http_proxy') or config.has_option('IRFlowAPI', 'https_proxy')):
-            auth_string = config.get('IRFlowAPI', 'proxy_user') + ':' + config.get('IRFlowAPI', 'proxy_pass') + '@'
-            proxy = None
-            if config.has_option('IRFlowAPI', 'http_proxy'):
-                proxy = config.get('IRFlowAPI', 'http_proxy')
-                if config.has_option('IRFlowAPI', 'http_proxy_port'):
-                    proxy += ':' + config.get('IRFlowAPI', 'http_proxy_port')
-            elif config.has_option('IRFlowAPI', 'https_proxy'):
-                proxy = config.get('IRFlowAPI', 'https_proxy')
-                if config.has_option('IRFlowAPI', 'https_proxy_port'):
-                    proxy += ':' + config.get('IRFlowAPI', 'https_proxy_port')
-            self.address = 'https://{0}'.format(auth_string) + proxy
-        else:
-            self.address = config.get('IRFlowAPI', 'address')
+        self.address = config.get('IRFlowAPI', 'address')
         self.api_user = config.get('IRFlowAPI', 'api_user')
         self.api_key = config.get('IRFlowAPI', 'api_key')
         if config.has_option('IRFlowAPI', 'protocol'):
