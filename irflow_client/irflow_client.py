@@ -166,7 +166,7 @@ class IRFlowClient(object):
         url = "%s://%s/%s" % (self.protocol, self.address, self.end_points['version'])
         headers = {'Content-type': 'application/json'}
 
-        response = self.session.get(url, verify=False, headers=headers)
+        response = self.session.get(url, verify=False, headers=headers, proxies=self.proxies)
 
         if response.status_code == 503:
             raise IRFlowMaintenanceError('IR-Flow Server is down for maintenance')
@@ -190,7 +190,7 @@ class IRFlowClient(object):
         if self.debug:
             self.dump_request_debug_info('Close Alert', url, headers, data=data)
 
-        response = self.session.put(url, json=data, headers=headers, verify=False)
+        response = self.session.put(url, json=data, headers=headers, verify=False, proxies=self.proxies)
 
         if self.debug:
             self.dump_response_debug_info('Close Alert', response.status_code, response.json())
@@ -216,7 +216,7 @@ class IRFlowClient(object):
         if self.debug:
             self.dump_request_debug_info('Attach Incident to Alert', url, headers=headers)
 
-        response = self.session.put(url, headers=headers, verify=False)
+        response = self.session.put(url, headers=headers, verify=False, proxies=self.proxies)
 
         if self.debug:
             self.dump_response_debug_info('Attach Incident to Alert', response.status_code, response.json())
@@ -242,7 +242,7 @@ class IRFlowClient(object):
         if self.debug:
             self.dump_request_debug_info('Upload Attachment to Alert', url, headers=headers)
 
-        response = self.session.post(url, data={}, files=data, headers=headers, verify=False)
+        response = self.session.post(url, data={}, files=data, headers=headers, verify=False, proxies=self.proxies)
 
         if self.debug:
             self.dump_response_debug_info('Upload Attachment to Alert', response.status_code, response.json())
@@ -267,7 +267,7 @@ class IRFlowClient(object):
         if self.debug:
             self.dump_request_debug_info('Upload Attachment to Incident', url, headers=headers)
 
-        response = self.session.post(url, data={}, files=data, headers=headers, verify=False)
+        response = self.session.post(url, data={}, files=data, headers=headers, verify=False, proxies=self.proxies)
 
         if self.debug:
             self.dump_response_debug_info('Upload Attachment to Incident', response.status_code, response.json())
@@ -292,7 +292,7 @@ class IRFlowClient(object):
         if self.debug:
             self.dump_request_debug_info('Upload Attachment to Alert', url, headers=headers)
 
-        response = self.session.post(url, data={}, files=data, headers=headers, verify=False)
+        response = self.session.post(url, data={}, files=data, headers=headers, verify=False, proxies=self.proxies)
 
         if self.debug:
             self.dump_response_debug_info('Upload Attachment to Alert Response', response.status_code, response.json())
@@ -315,7 +315,7 @@ class IRFlowClient(object):
             self.dump_request_debug_info('Download Attachment', url)
 
         with open(attachment_output_file, 'wb') as handle:
-            response = self.session.get(url, stream=True, verify=False)
+            response = self.session.get(url, stream=True, verify=False, proxies=self.proxies)
             for block in response.iter_content(1024):
                 handle.write(block)
 
@@ -342,7 +342,7 @@ class IRFlowClient(object):
         # Get a temporary file to download the results into
         temp = tempfile.TemporaryFile()
 
-        response = self.session.get(url, stream=True, verify=False)
+        response = self.session.get(url, stream=True, verify=False, proxies=self.proxies)
         # Iterate, downloading data 1,024 bytes at a time
         for block in response.iter_content(1024):
             temp.write(block)
@@ -373,7 +373,7 @@ class IRFlowClient(object):
         if self.debug:
             self.dump_request_debug_info('Put Fact Group', url, headers=headers)
 
-        response = self.session.put(url, json=fact_payload, verify=False, headers=headers)
+        response = self.session.put(url, json=fact_payload, verify=False, headers=headers, proxies=self.proxies)
 
         if self.debug:
             self.dump_response_debug_info('Put Fact Group', response.status_code, response.json())
@@ -397,7 +397,7 @@ class IRFlowClient(object):
         if self.debug:
             self.dump_request_debug_info('Get Fact Group', url, headers=headers)
 
-        response = self.session.get(url, verify=False, headers=headers)
+        response = self.session.get(url, verify=False, headers=headers, proxies=self.proxies)
 
         if self.debug:
             self.dump_response_debug_info('Get Fact Group', response.status_code, response.json())
@@ -421,7 +421,7 @@ class IRFlowClient(object):
         if self.debug:
             self.dump_request_debug_info('Get Alert', url, headers=headers)
 
-        response = self.session.get(url, verify=False, headers=headers)
+        response = self.session.get(url, verify=False, headers=headers, proxies=self.proxies)
 
         if self.debug:
             self.dump_response_debug_info('Get Alert', response.status_code, response.json())
@@ -461,7 +461,7 @@ class IRFlowClient(object):
         if self.debug:
             self.dump_request_debug_info('Create Alert', url, headers=headers, params=params)
 
-        response = self.session.post(url, json=params, verify=False, headers=headers)
+        response = self.session.post(url, json=params, verify=False, headers=headers, proxies=self.proxies)
         if self.debug:
             self.dump_response_debug_info('Create Alert', response.status_code, response.json())
 
@@ -495,7 +495,7 @@ class IRFlowClient(object):
         if self.debug:
             self.dump_request_debug_info('Create Incident', url, headers=headers, params=params)
 
-        response = self.session.post(url, json=params, verify=False, headers=headers)
+        response = self.session.post(url, json=params, verify=False, headers=headers, proxies=self.proxies)
 
         if self.debug:
             self.dump_response_debug_info('Create Incident', response.status_code, response.json())
@@ -520,7 +520,7 @@ class IRFlowClient(object):
         if self.debug:
             self.dump_request_debug_info('Get Incident', url, headers=headers)
 
-        response = self.session.get(url, verify=False, headers=headers)
+        response = self.session.get(url, verify=False, headers=headers, proxies=self.proxies)
 
         if self.debug:
             self.dump_response_debug_info('Get Incident', response.status_code, response.json())
@@ -564,7 +564,7 @@ class IRFlowClient(object):
         if self.debug:
             self.dump_request_debug_info('Update Incident', url, headers=headers, params=params)
 
-        response = self.session.put(url, json=params, verify=False, headers=headers)
+        response = self.session.put(url, json=params, verify=False, headers=headers, proxies=self.proxies)
 
         if self.debug:
             self.dump_response_debug_info('Update Incident', response.status_code, response.json())
@@ -588,7 +588,7 @@ class IRFlowClient(object):
         if self.debug:
             self.dump_request_debug_info('Attach Alert to Incident', url, headers=headers)
 
-        response = self.session.put(url, headers=headers, verify=False)
+        response = self.session.put(url, headers=headers, verify=False, proxies=self.proxies)
 
         if self.debug:
             self.dump_response_debug_info('Attach Alert to Incident', response.status_code, response.json())
@@ -617,7 +617,7 @@ class IRFlowClient(object):
         if self.debug:
             self.dump_request_debug_info('Get List of Picklists', url, headers=headers, params=params)
 
-        response = self.session.get(url, params=params, verify=False, headers=headers)
+        response = self.session.get(url, params=params, verify=False, headers=headers, proxies=self.proxies)
 
         if self.debug:
             self.dump_response_debug_info('Get List of Picklists', response.status_code, response.json())
@@ -642,7 +642,7 @@ class IRFlowClient(object):
         if self.debug:
             self.dump_request_debug_info('Get Picklist', url, headers=headers)
 
-        response = self.session.get(url, verify=False, headers=headers)
+        response = self.session.get(url, verify=False, headers=headers, proxies=self.proxies)
 
         if self.debug:
             self.dump_response_debug_info('Get Picklist', response.status_code, response.json())
@@ -678,7 +678,7 @@ class IRFlowClient(object):
         if self.debug:
             self.dump_request_debug_info('Add Item to Picklist', url, headers=headers, params=params)
 
-        response = self.session.post(url, json=params, verify=False, headers=headers)
+        response = self.session.post(url, json=params, verify=False, headers=headers, proxies=self.proxies)
 
         if self.debug:
             self.dump_response_debug_info('Add Item to Picklist', response.status_code, response.json())
@@ -709,7 +709,7 @@ class IRFlowClient(object):
         if self.debug:
             self.dump_request_debug_info('Get List of Picklist Items', url, headers=headers, params=params)
 
-        response = self.session.get(url, params=params, verify=False, headers=headers)
+        response = self.session.get(url, params=params, verify=False, headers=headers, proxies=self.proxies)
 
         if self.debug:
             self.dump_response_debug_info('Get List of Picklist Items', response.status_code, response.json())
@@ -745,7 +745,7 @@ class IRFlowClient(object):
         if self.debug:
             self.dump_request_debug_info('Add Picklist Item', url, headers=headers, params=params)
 
-        response = self.session.post(url, json=params, verify=False, headers=headers)
+        response = self.session.post(url, json=params, verify=False, headers=headers, proxies=self.proxies)
 
         if self.debug:
             self.dump_response_debug_info('Add PIcklist Item', response.status_code, response.json())
@@ -770,7 +770,7 @@ class IRFlowClient(object):
         if self.debug:
             self.dump_request_debug_info('Get Picklist Item', url, headers=headers)
 
-        response = self.session.get(url, verify=False, headers=headers)
+        response = self.session.get(url, verify=False, headers=headers, proxies=self.proxies)
 
         if self.debug:
             self.dump_response_debug_info('Get Picklist Item', response.status_code, response.json())
@@ -795,7 +795,7 @@ class IRFlowClient(object):
         if self.debug:
             self.dump_request_debug_info('Restore Picklist Item', url, headers=headers)
 
-        response = self.session.put(url, verify=False, headers=headers)
+        response = self.session.put(url, verify=False, headers=headers, proxies=self.proxies)
 
         if self.debug:
             self.dump_response_debug_info('Restore Picklist Item', response.status_code, response.json())
@@ -820,7 +820,7 @@ class IRFlowClient(object):
         if self.debug:
             self.dump_request_debug_info('Delete Picklist Item', url, headers=headers)
 
-        response = self.session.delete(url, verify=False, headers=headers)
+        response = self.session.delete(url, verify=False, headers=headers, proxies=self.proxies)
 
         if self.debug:
             self.dump_response_debug_info('Delete Picklist Item', response.status_code, response.json())
@@ -863,7 +863,7 @@ class IRFlowClient(object):
         if self.debug:
             self.dump_request_debug_info('Store Object Type', url, headers=headers, params=params)
 
-        response = self.session.post(url, json=params, verify=False, headers=headers)
+        response = self.session.post(url, json=params, verify=False, headers=headers, proxies=self.proxies)
 
         if self.debug:
             self.dump_response_debug_info('Store Object Type', response.status_code, response.json())
@@ -901,7 +901,7 @@ class IRFlowClient(object):
         if self.debug:
             self.dump_request_debug_info('Attach Field to Object Type', url, headers=headers, params=params)
 
-        response = self.session.put(url, json=params, verify=False, headers=headers)
+        response = self.session.put(url, json=params, verify=False, headers=headers, proxies=self.proxies)
 
         if self.debug:
             self.dump_response_debug_info('Attach Field to Object Type', response.status_code, response.json())
@@ -991,6 +991,36 @@ class IRFlowClient(object):
         if self.debug:
             self.dump_settings()
 
+        # Check if the user is trying to use a proxy by seeing if the config args contains any of the proxy_options.
+        proxy_options = ['proxy_user', 'proxy_pass', 'http_proxy', 'https_proxy', 'http_proxy_port', 'https_proxy_port']
+        proxy_usage_found = False
+        for option in proxy_options:
+            if config_args[option]:
+                proxy_usage_found = True
+                break
+
+        # If any of the proxy options are used, do some basic error checking.  Log issues as warnings.
+        if proxy_usage_found:
+            if config_args['proxy_user'] and not config_args['proxy_pass']:
+                raise KeyError('A "proxy_pass" must be submitted if using a "proxy_user"')
+            if config_args['proxy_pass'] and not config_args['proxy_user']:
+                raise KeyError('A "proxy_user" must be submitted if using a "proxy_pass"')
+            if not config_args['http_proxy'] or not config_args['https_proxy']:
+                raise KeyError('A proxy option was submitted for configuration but neither an "http_proxy" nor an '
+                               '"https_proxy" was submitted')
+
+        # Our logic for setting up proxies
+        self.proxies = {}
+        if proxy_usage_found:
+            proxy_user = config_args['proxy_user'] + ':' if config_args['proxy_user'] else ''
+            proxy_pass = config_args['proxy_pass'] + '@' if config_args['proxy_pass'] else ''
+            if config_args['http_proxy']:
+                port = ':' + config_args['http_proxy_port'] if config_args['http_proxy_port'] else ''
+                self.proxies['http'] = 'http://' + proxy_user + proxy_pass + config_args['http_proxy'] + port
+            if config_args['https_proxy']:
+                port = ':' + config_args['https_proxy_port'] if config_args['https_proxy_port'] else ''
+                self.proxies['https'] = 'https://' + proxy_user + proxy_pass + config_args['https_proxy'] + port
+
     def _get_config_file_params(self, config_file):
         """Helper function to parse configuration arguments from a valid IR-Flow configuration file
 
@@ -1028,8 +1058,39 @@ class IRFlowClient(object):
             )
             missing_options.append('api_key')
 
+        # Check if the user is trying to use a proxy by seeing if the config file contains any of the proxy_options.
+        proxy_options = ['proxy_user', 'proxy_pass', 'http_proxy', 'https_proxy', 'http_proxy_port', 'https_proxy_port']
+        proxy_usage_found = False
+        for option in proxy_options:
+            if config.has_option('IRFlowAPI', option):
+                proxy_usage_found = True
+                break
+
+        # If any of the proxy options are used, do some basic error checking.  Log issues as warnings.
+        if proxy_usage_found:
+            if not config.has_option('IRFlowAPI', 'proxy_user') and config.has_option('IRFlowAPI', 'proxy_pass'):
+                self.logger.warning(
+                    'Configuration File "{}" does not contain the "proxy_user" option in the [IRFlowAPI] '
+                    'section, but a proxy_pass option was found in the file'.format(config_file)
+                )
+                missing_options.append('proxy_user')
+            if not config.has_option('IRFlowAPI', 'proxy_pass') and config.has_option('IRFlowAPI', 'proxy_user'):
+                self.logger.warning(
+                    'Configuration File "{}" does not contain the "proxy_pass" option in the [IRFlowAPI] '
+                    'section, but a proxy_user option was found in the file'.format(config_file)
+                )
+                missing_options.append('proxy_pass')
+            if not config.has_option('IRFlowAPI', 'http_proxy') or not config.has_option('IRFlowAPI', 'https_proxy'):
+                self.logger.warning(
+                    'Configuration File "{}" does not contain the "http_proxy" option or the "https_proxy" option in '
+                    'the [IRFlowAPI] section, but a proxy option was found in the file'.format(config_file)
+                )
+                missing_options.append('http_proxy')
+                missing_options.append('https_proxy')
+
         # Do not need to check for protocol, it is optional.  Will assume https if missing.
         # Do not need to check for debug, it is optional.  Will assume False if missing.
+        # Do not need to check for proxy_user, proxy_pass, http_proxy_port, nor https_proxy_port.  They are optional.
 
         # If the required keys do not exist, then simply exit
         if len(missing_options) > 0:
@@ -1056,3 +1117,21 @@ class IRFlowClient(object):
         # Dump Configuration if --debug
         if self.debug:
             self.dump_settings()
+
+        # Our logic for setting up proxies
+        self.proxies = {}
+        if proxy_usage_found:
+            proxy_user = config.get('IRFlowAPI', 'proxy_user') + ':' \
+                if config.has_option('IRFlowAPI', 'proxy_user') else ''
+            proxy_pass = config.get('IRFlowAPI', 'proxy_pass') + '@' \
+                if config.has_option('IRFlowAPI', 'proxy_pass') else ''
+            if config.has_option('IRFlowAPI', 'http_proxy'):
+                port = ':' + config.get('IRFlowAPI', 'http_proxy_port') \
+                    if config.has_option('IRFlowAPI', 'http_proxy_port') else ''
+                self.proxies['http'] = 'http://' + proxy_user + proxy_pass + \
+                                       config.get('IRFlowAPI', 'http_proxy') + port
+            if config.has_option('IRFlowAPI', 'https_proxy'):
+                port = ':' + config.get('IRFlowAPI', 'https_proxy_port') \
+                    if config.has_option('IRFlowAPI', 'https_proxy_port') else ''
+                self.proxies['https'] = 'https://' + proxy_user + proxy_pass + \
+                                        config.get('IRFlowAPI', 'https_proxy') + port
