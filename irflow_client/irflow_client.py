@@ -948,37 +948,43 @@ class IRFlowClient(object):
             protocol (str): https unless otherwise specified, default = HTTPS
             debug (bool): enable debug output, default = None
             verbose (int): turn up the verbosity default = 0 (optional)
+            proxy_user (str): the username for a proxy, default = None
+            proxy_pass (str): the password for a proxy, default = None
+            http_proxy (str): the address of the http proxy, default = None
+            https_proxy (str): the address of the https proxy, default = None
+            http_proxy_port (str): the port for the http proxy, default = None
+            https_proxy_port (str): the port for the https proxy, default = None
         """
 
         # Checking for missing config values
 
-        if isinstance(config_args['address'], str):
+        if 'address' in config_args and isinstance(config_args['address'], str):
             self.address = config_args['address']
-        elif not config_args['address']:
-            raise KeyError('You have the wrong or missing key or value')
+        elif 'address' not in config_args:
+            raise KeyError('An "address" must be submitted to establish a connection to the IR-Flow client')
         else:
-            raise KeyError('You have the wrong or missing key or value')
+            raise KeyError('The "address" submitted had an invalid value')
 
-        if isinstance(config_args['api_user'], str):
+        if 'api_user' in config_args and isinstance(config_args['api_user'], str):
             self.api_user = config_args['api_user']
-        elif not config_args['api_user']:
-            raise KeyError('You have the wrong or missing key or value')
+        elif 'api_user' not in config_args:
+            raise KeyError('An "api_user" must be submitted to establish a connection to the IR-Flow client')
         else:
-            raise KeyError('You have the wrong or missing key or value')
+            raise KeyError('The "api_user" submitted had an invalid value')
 
-        if isinstance(config_args['api_key'], str):
+        if 'api_key' in config_args and isinstance(config_args['api_key'], str):
             self.api_key = config_args['api_key']
-        elif not config_args['api_key']:
-            raise KeyError('You have the wrong or missing key or value')
+        elif 'api_key' not in config_args:
+            raise KeyError('An "api_key" must be submitted to establish a connection to the IR-Flow client')
         else:
-            raise KeyError('You have the wrong or missing key or value')
+            raise KeyError('The "api_key" submitted had an invalid value')
 
-        if config_args['protocol']:
+        if 'protocol' in config_args and isinstance(config_args['protocol'], str):
             self.protocol = config_args['protocol']
         else:
             self.protocol = 'https'
-        if config_args['debug']:
-            self.debug = config_args['debug']
+        if 'debug' in config_args and config_args['debug']:
+            self.debug = True
         else:
             self.debug = False
         try:
@@ -991,34 +997,37 @@ class IRFlowClient(object):
         if self.debug:
             self.dump_settings()
 
-        # Check if the user is trying to use a proxy by seeing if the config args contains any of the proxy_options.
-        proxy_options = ['proxy_user', 'proxy_pass', 'http_proxy', 'https_proxy', 'http_proxy_port', 'https_proxy_port']
+        # Check if the user is trying to use a proxy by seeing if the config args contains any of the proxy_args.
+        # Also, make sure that the submitted proxy option is a string since all of the proxy_args should be a string.
+        proxy_args = ['proxy_user', 'proxy_pass', 'http_proxy', 'https_proxy', 'http_proxy_port', 'https_proxy_port']
         proxy_usage_found = False
-        for option in proxy_options:
-            if config_args[option]:
-                proxy_usage_found = True
-                break
+        for option in proxy_args:
+            if option in config_args:
+                if isinstance(config_args[option], str):
+                    proxy_usage_found = True
+                else:
+                    raise KeyError('The configuration argument "{}" was set to an incorrect type'.format(option))
 
-        # If any of the proxy options are used, do some basic error checking.  Log issues as warnings.
+        # If any of the proxy options are used, do some basic error checking.
         if proxy_usage_found:
-            if config_args['proxy_user'] and not config_args['proxy_pass']:
+            if 'proxy_user' in config_args and 'proxy_pass' not in config_args:
                 raise KeyError('A "proxy_pass" must be submitted if using a "proxy_user"')
-            if config_args['proxy_pass'] and not config_args['proxy_user']:
+            if 'proxy_pass' in config_args and 'proxy_user' not in config_args:
                 raise KeyError('A "proxy_user" must be submitted if using a "proxy_pass"')
-            if not config_args['http_proxy'] or not config_args['https_proxy']:
+            if 'http_proxy' not in config_args and 'https_proxy' not in config_args:
                 raise KeyError('A proxy option was submitted for configuration but neither an "http_proxy" nor an '
                                '"https_proxy" was submitted')
 
-        # Our logic for setting up proxies
+        # Our logic for setting up proxies using a dict of configuration arguments.
         self.proxies = {}
         if proxy_usage_found:
-            proxy_user = config_args['proxy_user'] + ':' if config_args['proxy_user'] else ''
-            proxy_pass = config_args['proxy_pass'] + '@' if config_args['proxy_pass'] else ''
-            if config_args['http_proxy']:
-                port = ':' + config_args['http_proxy_port'] if config_args['http_proxy_port'] else ''
+            proxy_user = config_args['proxy_user'] + ':' if 'proxy_user' in config_args else ''
+            proxy_pass = config_args['proxy_pass'] + '@' if 'proxy_pass' in config_args else ''
+            if 'http_proxy' in config_args:
+                port = ':' + config_args['http_proxy_port'] if 'http_proxy_port' in config_args else ''
                 self.proxies['http'] = 'http://' + proxy_user + proxy_pass + config_args['http_proxy'] + port
-            if config_args['https_proxy']:
-                port = ':' + config_args['https_proxy_port'] if config_args['https_proxy_port'] else ''
+            if 'https_proxy' in config_args:
+                port = ':' + config_args['https_proxy_port'] if 'https_proxy_port' in config_args else ''
                 self.proxies['https'] = 'https://' + proxy_user + proxy_pass + config_args['https_proxy'] + port
 
     def _get_config_file_params(self, config_file):
