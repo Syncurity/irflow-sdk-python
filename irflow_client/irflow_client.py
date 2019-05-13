@@ -95,12 +95,20 @@ class IRFlowClient(object):
 
         # Set timeout on (connect, read) timeouts
         self.session.timeout=(5, 30)
+
         # Set the User-Agent
         self.session.headers.update({'User-Agent': IRFlowClient._build_user_agent()})
 
         # Set the X-Authorization header for all calls through the API
         # The rest of the headers are specified by the individual calls.
         self.session.headers.update({'X-Authorization': "{} {}".format(self.api_user, self.api_key)})
+
+        # If a proxy option was found from parsing the config file/args, we add the proxy to the session
+        if self.proxy_usage:
+            if config_file:
+                self._get_proxy_from_config_file(config_file)
+            elif config_args:
+                self._get_proxy_from_config_args(config_args)
 
         if not self.circle_ci:
             self.version = self.get_version()
@@ -948,37 +956,43 @@ class IRFlowClient(object):
             protocol (str): https unless otherwise specified, default = HTTPS
             debug (bool): enable debug output, default = None
             verbose (int): turn up the verbosity default = 0 (optional)
+            proxy_user (str): the username for a proxy, default = None (optional)
+            proxy_pass (str): the password for a proxy, default = None (optional)
+            http_proxy (str): the address of the http proxy, default = None (optional)
+            https_proxy (str): the address of the https proxy, default = None (optional)
+            http_proxy_port (str): the port for the http proxy, default = None (optional)
+            https_proxy_port (str): the port for the https proxy, default = None (optional)
         """
 
         # Checking for missing config values
 
-        if isinstance(config_args['address'], str):
+        if 'address' in config_args and isinstance(config_args['address'], str):
             self.address = config_args['address']
-        elif not config_args['address']:
-            raise KeyError('You have the wrong or missing key or value')
+        elif 'address' not in config_args:
+            raise KeyError('An "address" must be submitted to establish a connection to the IR-Flow client')
         else:
-            raise KeyError('You have the wrong or missing key or value')
+            raise KeyError('The "address" submitted had an invalid value')
 
-        if isinstance(config_args['api_user'], str):
+        if 'api_user' in config_args and isinstance(config_args['api_user'], str):
             self.api_user = config_args['api_user']
-        elif not config_args['api_user']:
-            raise KeyError('You have the wrong or missing key or value')
+        elif 'api_user' not in config_args:
+            raise KeyError('An "api_user" must be submitted to establish a connection to the IR-Flow client')
         else:
-            raise KeyError('You have the wrong or missing key or value')
+            raise KeyError('The "api_user" submitted had an invalid value')
 
-        if isinstance(config_args['api_key'], str):
+        if 'api_key' in config_args and isinstance(config_args['api_key'], str):
             self.api_key = config_args['api_key']
-        elif not config_args['api_key']:
-            raise KeyError('You have the wrong or missing key or value')
+        elif 'api_key' not in config_args:
+            raise KeyError('An "api_key" must be submitted to establish a connection to the IR-Flow client')
         else:
-            raise KeyError('You have the wrong or missing key or value')
+            raise KeyError('The "api_key" submitted had an invalid value')
 
-        if config_args['protocol']:
+        if 'protocol' in config_args and isinstance(config_args['protocol'], str):
             self.protocol = config_args['protocol']
         else:
             self.protocol = 'https'
-        if config_args['debug']:
-            self.debug = config_args['debug']
+        if 'debug' in config_args and config_args['debug']:
+            self.debug = True
         else:
             self.debug = False
         try:
@@ -991,8 +1005,58 @@ class IRFlowClient(object):
         if self.debug:
             self.dump_settings()
 
+        # Check if the user is trying to use a proxy by seeing if the config args contains any of the proxy_args.
+        # Also, make sure that the submitted proxy option is a string since all of the proxy_args should be a string.
+        proxy_args = ['proxy_user', 'proxy_pass', 'http_proxy', 'https_proxy', 'http_proxy_port', 'https_proxy_port']
+        self.proxy_usage = False
+        for option in proxy_args:
+            if option in config_args:
+                if isinstance(config_args[option], str):
+                    self.proxy_usage = True
+                else:
+                    raise KeyError('The configuration argument "{}" was set to an incorrect type'.format(option))
+
+    def _get_proxy_from_config_args(self, config_args):
+        """Helper function to check/parse the proxy configuration arguments provided in a dict
+
+        Args:
+            config_args (dict): A dict of the following keys:
+
+        Keys:
+            address (str): IR-Flow Server FQDN or IP Address
+            api_user (str): IR-Flow API User
+            api_key (str): above user's api key
+            protocol (str): https unless otherwise specified, default = HTTPS
+            debug (bool): enable debug output, default = None
+            verbose (int): turn up the verbosity default = 0 (optional)
+            proxy_user (str): the username for a proxy, default = None
+            proxy_pass (str): the password for a proxy, default = None
+            http_proxy (str): the address of the http proxy, default = None
+            https_proxy (str): the address of the https proxy, default = None
+            http_proxy_port (str): the port for the http proxy, default = None
+            https_proxy_port (str): the port for the https proxy, default = None
+        """
+        # If any of the proxy options are used, do some basic error checking.
+        if 'proxy_user' in config_args and 'proxy_pass' not in config_args:
+            raise KeyError('A "proxy_pass" must be submitted if using a "proxy_user"')
+        if 'proxy_pass' in config_args and 'proxy_user' not in config_args:
+            raise KeyError('A "proxy_user" must be submitted if using a "proxy_pass"')
+        if 'http_proxy' not in config_args and 'https_proxy' not in config_args:
+            raise KeyError('A proxy option was submitted for configuration but neither an "http_proxy" nor an '
+                           '"https_proxy" was submitted')
+
+        # The logic we are using to set up proxies.  We store the result into self.session.proxies
+        proxy_user = config_args['proxy_user'] + ':' if 'proxy_user' in config_args else ''
+        proxy_pass = config_args['proxy_pass'] + '@' if 'proxy_pass' in config_args else ''
+        if 'http_proxy' in config_args:
+            port = ':' + config_args['http_proxy_port'] if 'http_proxy_port' in config_args else ''
+            self.session.proxies['http'] = 'http://' + proxy_user + proxy_pass + config_args['http_proxy'] + port
+        if 'https_proxy' in config_args:
+            port = ':' + config_args['https_proxy_port'] if 'https_proxy_port' in config_args else ''
+            self.session.proxies['https'] = 'https://' + proxy_user + proxy_pass + config_args['https_proxy'] + port
+
     def _get_config_file_params(self, config_file):
-        """Helper function to parse configuration arguments from a valid IR-Flow configuration file
+        """Helper function to parse configuration options from a valid IR-Flow configuration file
 
         Args:
             config_file (str): Path to a valid IR-Flow configuration file
@@ -1028,6 +1092,14 @@ class IRFlowClient(object):
             )
             missing_options.append('api_key')
 
+        # Check if the user is trying to use a proxy by seeing if the config file contains any of the proxy_options.
+        proxy_options = ['proxy_user', 'proxy_pass', 'http_proxy', 'https_proxy', 'http_proxy_port', 'https_proxy_port']
+        self.proxy_usage = False
+        for option in proxy_options:
+            if config.has_option('IRFlowAPI', option):
+                self.proxy_usage = True
+                break
+
         # Do not need to check for protocol, it is optional.  Will assume https if missing.
         # Do not need to check for debug, it is optional.  Will assume False if missing.
 
@@ -1056,3 +1128,60 @@ class IRFlowClient(object):
         # Dump Configuration if --debug
         if self.debug:
             self.dump_settings()
+
+    def _get_proxy_from_config_file(self, config_file):
+        """Helper function to parse the proxy configuration options from a valid IR-Flow configuration file
+
+        Args:
+            config_file (str): Path to a valid IR-Flow configuration file
+        """
+        config = configparser.ConfigParser()
+
+        config.read(config_file)
+
+        missing_options = []
+
+        # If any of the proxy options are used, do some basic error checking.  Log issues as warnings.
+        # We do not need to make sure the config file has the IRFlowAPI section because it was already checked.
+        if not config.has_option('IRFlowAPI', 'proxy_user') and config.has_option('IRFlowAPI', 'proxy_pass'):
+            self.logger.warning(
+                'Configuration File "{}" does not contain the "proxy_user" option in the [IRFlowAPI] '
+                'section, but a proxy_pass option was found in the file'.format(config_file)
+            )
+            missing_options.append('proxy_user')
+        if not config.has_option('IRFlowAPI', 'proxy_pass') and config.has_option('IRFlowAPI', 'proxy_user'):
+            self.logger.warning(
+                'Configuration File "{}" does not contain the "proxy_pass" option in the [IRFlowAPI] '
+                'section, but a proxy_user option was found in the file'.format(config_file)
+            )
+            missing_options.append('proxy_pass')
+        if not config.has_option('IRFlowAPI', 'http_proxy') and not config.has_option('IRFlowAPI', 'https_proxy'):
+            self.logger.warning(
+                'Configuration File "{}" does not contain the "http_proxy" option or the "https_proxy" option in '
+                'the [IRFlowAPI] section, but a proxy option was found in the file'.format(config_file)
+            )
+            missing_options.append('http_proxy')
+            missing_options.append('https_proxy')
+
+        # Do not need to check for proxy_user, proxy_pass, http_proxy_port, nor https_proxy_port.  They are optional.
+
+        # If the required keys do not exist, then simply exit
+        if len(missing_options) > 0:
+            self.logger.error('Missing configuration sections: {0}'.format(", ".join(missing_options)))
+            raise IRFlowClientConfigError('Missing configuration sections: {0}'.format(", ".join(missing_options)))
+
+        # The logic we are using to set up proxies.  We store the result into self.session.proxies
+        proxy_user = config.get('IRFlowAPI', 'proxy_user') + ':' \
+            if config.has_option('IRFlowAPI', 'proxy_user') else ''
+        proxy_pass = config.get('IRFlowAPI', 'proxy_pass') + '@' \
+            if config.has_option('IRFlowAPI', 'proxy_pass') else ''
+        if config.has_option('IRFlowAPI', 'http_proxy'):
+            port = ':' + config.get('IRFlowAPI', 'http_proxy_port') \
+                if config.has_option('IRFlowAPI', 'http_proxy_port') else ''
+            self.session.proxies['http'] = 'http://' + proxy_user + proxy_pass + \
+                                           config.get('IRFlowAPI', 'http_proxy') + port
+        if config.has_option('IRFlowAPI', 'https_proxy'):
+            port = ':' + config.get('IRFlowAPI', 'https_proxy_port') \
+                if config.has_option('IRFlowAPI', 'https_proxy_port') else ''
+            self.session.proxies['https'] = 'https://' + proxy_user + proxy_pass + \
+                                            config.get('IRFlowAPI', 'https_proxy') + port
