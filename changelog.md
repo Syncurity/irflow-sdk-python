@@ -40,3 +40,4 @@ irflow-sdk-python changelog
 * v1.5.8 Fix python_requires for pip 18.0+
 * v1.5.9 Update URLLib for https://nvd.nist.gov/vuln/detail/CVE-2019-11324
 * v1.5.10 Fix py2 compatibility
+* v1.5.11 Fixed Create Incident to not require incident fields

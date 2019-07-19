@@ -467,14 +467,15 @@ class IRFlowClient(object):
 
         return response.json()
 
-    def create_incident(self, incident_fields, incident_type_name, incident_subtype_name=None, description=None):
+    def create_incident(self, incident_type_name, incident_fields=None,
+                        incident_subtype_name=None, description=None):
         """Create an incident of the desired type and subtype with the specified fields and description
 
         Args:
-            incident_fields (dict): Key, Value pairs of fields configured in IR-Flow and their values
             incident_type_name (str): The string name of the incident type with which this incident should be created
             incident_subtype_name (str): The string name of the incident subtype with which this incident should be
                 created (optional)
+            incident_fields (dict): Key, Value pairs of fields configured in IR-Flow and their values (optional)
             description (str): An optional string description for the incident
         """
         url = '%s://%s/%s' % (self.protocol, self.address, self.end_points['create_incident'])
