@@ -24,21 +24,34 @@ if irflowAPI.debug:
     # lowest printed level to DEBUG
     logging.basicConfig(level=logging.DEBUG)
 else:
-    # otherwise, use the standard configuration of the INFO level - these logging configurations can be made much
-    # more complex, but this sort of configuration is the minimum needed to get output on the console. If you're using
-    # the irflow-integrations package, a package wide logging configuration can be found in the
-    # irflow_integrations.utils submodule
+    # otherwise, use the standard configuration of the INFO level - these logging configurations
+    # can be made much more complex, but this sort of configuration is the minimum needed to get
+    # output on the console. If you're using the irflow-integrations package, a package wide
+    # logging configuration can be found in the irflow_integrations.utils submodule
     logging.basicConfig(level=logging.INFO)
 
-# Once the logger has been configured, create the logger instance for this class. Even though the code in this example
-# uses only print statements for console output, a logging object must be made in order for the logging information from
-# the irflow_client object to be output
+# Once the logger has been configured, create the logger instance for this class. Even though the
+# code in this example uses only print statements for console output, a logging object must be
+# made in order for the logging information from the irflow_client object to be output
 logger = logging.getLogger('IR-Flow API Example')
 
 if irflowAPI.debug:
-    # Now that a logger has been created, we can dump the settings of the client if the debug flag is set, or skip this
-    # otherwise.
+    # Now that a logger has been created, we can dump the settings of the client if the debug
+    # flag is set, or skip this otherwise.
     irflowAPI.dump_settings()
+
+
+# Deduplicated functions
+def get_fact_data(fg_id):
+    """get fact data function"""
+    fact_data1 = irflowAPI.get_fact_group(fg_id)
+    #
+    if fact_data1['success']:
+        print("Get Fact Group: Success")
+        return fact_data1['data']['fact_group']['facts']  # List of the facts
+    else:
+        print("Get Fact Group: Failed")
+
 
 print('=========== Get IR-Flow Version =========')
 try:
@@ -49,21 +62,23 @@ except ConnectionError:
 print(version)
 
 print('========== Create Object Type ==========')
-object_type = irflowAPI.create_object_type(type_name="createdByApi6", type_label="CreatedByAPi6", parent_type_name="alert")
+object_type = irflowAPI.create_object_type(type_name="createdByApi6",
+                                           type_label="CreatedByAPi6",
+                                           parent_type_name="alert")
 if object_type['success']:
     print("Created object_type with id" + str(object_type['data']['object_type']['id']))
 else:
     print("Failed to create object type")
 
 
-print ('========== Attach Field to Object Type ==========')
+print('========== Attach Field to Object Type ==========')
 attach_field = irflowAPI.attach_field_to_object_type('createdByApi6', 'av_detected')
 if attach_field['success']:
     print("Attached field av_detected")
 else:
     print("Failed to attach field av_detected")
 
-print ('========== Create Alert ==========')
+print('========== Create Alert ==========')
 # Create an Alert using the API
 # First set-up the alert data we want to use to create this alert with.
 alert_fields = {'src_dns': 'phish.com', 'description': 'A description of the phish.'}
@@ -72,9 +87,11 @@ description = 'Super Bad API Event'  # The Alert Description
 # You will get an error if this DS Config does not exist in IR Flow.
 ds_config_name = 'Phishing'
 # Call the irflow_api method to create an alert.
-# NOTE: irflowAPI is the object we created from the irflow_client.  This is how all methods are called.
+# NOTE: irflowAPI is the object we created from the irflow_client.
+# This is how all methods are called.
 # The call returns a json data structure (a dictionary in python)
-alert_data = irflowAPI.create_alert(alert_fields, description=description, incoming_field_group_name=ds_config_name)
+alert_data = irflowAPI.create_alert(alert_fields, description=description,
+                                    incoming_field_group_name=ds_config_name)
 
 if alert_data['success']:
     # Now get the alert_num (The unique id used to interact with this alert through the REST API.
@@ -104,16 +121,12 @@ else:
 #
 #
 fact_group_id = new_alert['data']['alert']['fact_group_id']
-fact_data = irflowAPI.get_fact_group(fact_group_id)
-#
-if fact_data['success']:
-    print("Get Fact Group: Success")
-    facts = fact_data['data']['fact_group']['facts']  # List of the facts
 
-    print('Source DNS: ' + str(irflowAPI.get_field_by_name('src_dns', facts)['value']))
-    print('Description: ' + str(irflowAPI.get_field_by_name('description', facts)['value']))
-else:
-    print("Get Fact Group: Failed")
+facts = get_fact_data(fact_group_id)
+
+print('Source DNS: ' + str(irflowAPI.get_field_by_name('src_dns', facts)['value']))
+print('Description: ' + str(irflowAPI.get_field_by_name('description', facts)['value']))
+
 
 print('========== Put Fact Group ==========')
 # Now Update the Source DNS Field
@@ -121,7 +134,7 @@ print('========== Put Fact Group ==========')
 new_value = 'phishing.com'
 new_fact_data = {'src_dns': new_value, 'file_hash': '%s' % uuid.uuid4()}
 # In order to update Facts on a Alert, we have to retrieve the fact_group_id from the Alert.
-# Note that this call is going to override the original values we set in the create_alert call above.
+# Note that this call is going to override the original values we set in the create_alert call above
 update_results = irflowAPI.put_fact_group(fact_group_id, new_fact_data)
 
 if update_results['success']:
@@ -132,16 +145,11 @@ else:
 
 print('========== Get Fact Group to See Changed Value ==========')
 
-fact_data = irflowAPI.get_fact_group(fact_group_id)
+facts = get_fact_data(fact_group_id)
 
-if fact_data['success']:
-    print("Get Fact Group: Success")
-    facts = fact_data['data']['fact_group']['facts']  # List of the facts
+print('Source DNS: ' + str(irflowAPI.get_field_by_name('src_dns', facts)['value']))
+print('Should match Value put to fact group above ^^^^^')
 
-    print('Source DNS: ' + str(irflowAPI.get_field_by_name('src_dns', facts)['value']))
-    print('Should match Value put to fact group above ^^^^^')
-else:
-    print("Get Fact Group: Failed")
 
 print('========== Upload Attachment To Alert ==========')
 # Now upload a file to the Alert
@@ -155,19 +163,21 @@ else:
 
 
 print('========== Download Attachment ==========')
-# Now we need to fetch the Alert Data again, so we can grab the Attachment_id of the attachment we just uploaded,
-# and use it to download the attachment.
+# Now we need to fetch the Alert Data again, so we can grab the Attachment_id of the attachment
+# we just uploaded, and use it to download the attachment.
 alert_data = irflowAPI.get_alert(alert_num)
 
-# Note that we know there is only one attachment because we just created the alert, then uploaded a single file.
-# If we were worknig with an arbitrary alert in the application, we might need to search through the
+# Note that we know there is only one attachment because we just created the alert,
+# then uploaded a single file.
+# If we were working with an arbitrary alert in the application, we might need to search through the
 # list of attachments to find the right on by name.
 attachment_id = alert_data['data']['alert']['attachments'][0]['id']
 # Download the image to a new file.  They better be the same image!
 irflowAPI.download_attachment(attachment_id, './downloaded_sample_image.png')
 
 print('========== Close Alert ==========')
-# This first call should return success = failure, as we do not hae a close reason "Foo Bar", unless you added one!
+# This first call should return success = failure, as we do not hae a close reason "Foo Bar",
+# unless you added one!
 close_response = irflowAPI.close_alert(alert_num, "Foo Bar")
 if close_response['success']:
     print("Close Alert with Close Reason = 'Foo Bar' succeeded.  This was not expected!")
@@ -191,9 +201,9 @@ description = 'Super Bad API Incident'  # The Alert Description
 # You will get an error if this Incident Type does not exist in IR Flow.
 incident_type_name = 'Phishing'
 incident_subtype_name = 'Inbound Phishing'
-# Call the irflow_api method to create an Incident.
-# NOTE: irflowAPI is the object we created from the irflow_client.  This is how all methods are called.
-# The call returns a json data structure (a dictionary in python)
+# Call the irflow_api method to create an Incident. NOTE: irflowAPI is the object we created from
+# the irflow_client.  This is how all methods are called. The call returns a json data structure
+# (a dictionary in python)
 incident_data = irflowAPI.create_incident(incident_fields,
                                           incident_type_name,
                                           incident_subtype_name=incident_subtype_name,
@@ -243,12 +253,15 @@ incident_fields = {'time_remediated': datetime.datetime.now().strftime("%Y-%m-%d
 description = 'Super Bad API Incident - Remediated'  # The Alert Description
 
 owner_id = 2
-group_ids = [1,2,3]
+group_ids = [1, 2,  3]
 
-# Call the irflow_api method to update an Incident.
-# NOTE: irflowAPI is the object we created from the irflow_client.  This is how all methods are called.
-# The call returns a json data structure (a dictionary in python)
-incident_data = irflowAPI.update_incident(incident_num, incident_fields, incident_type_name, incident_subtype_name=incident_subtype_name, description=description, owner_id=owner_id, group_ids=group_ids)
+# Call the irflow_api method to update an Incident. NOTE: irflowAPI is the object we created from
+# the irflow_client.  This is how all methods are called. The call returns a json data structure
+# (a dictionary in python)
+incident_data = irflowAPI.update_incident(incident_num, incident_fields, incident_type_name,
+                                          incident_subtype_name=incident_subtype_name,
+                                          description=description, owner_id=owner_id,
+                                          group_ids=group_ids)
 
 if incident_data['success']:
     print("Update Incident: Success")
@@ -279,7 +292,7 @@ def test_picklist_apis(found_picklist):
         print("Get Picklist: Success")
         print('Picklist: ' + str(picklist_data['data']['picklist']['name']))
     else:
-        print ("Get Picklist: Failed")
+        print("Get Picklist: Failed")
 
     # Add an item to the Picklist
     print('========== Add Item to Picklist ==========')
@@ -313,7 +326,9 @@ def test_picklist_apis(found_picklist):
 
     # Create a duplicate Picklist Item with this picklist_id
     print('========== Create Picklist Item ==========')
-    create_item_result = irflowAPI.create_picklist_item(picklist_id, 'example_value', 'Example Label')
+    create_item_result = irflowAPI.create_picklist_item(picklist_id,
+                                                        'example_value',
+                                                        'Example Label')
 
     if create_item_result['success']:
         print("Add Item to Picklist: Succeeded unexpected. Something went wrong.")
@@ -346,6 +361,8 @@ if picklists_result['success']:
     print("List Picklists: Success")
 else:
     print("List Picklists: Failed")
+
+found_picklist = []
 
 # Check if any picklists were found
 if 'picklists' in picklists_result['data']:
