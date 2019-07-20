@@ -30,12 +30,12 @@ jobs:
           command: |
             source ../venv/bin/activate
             aws s3 cp s3://syncurity-ci/test_data.py .
-            py.test --cov-report junitxml --cov-config .coveragerc --cov ../
-            python-codacy-coverage -r coverage.xml
             mkdir -p /tmp/artifacts
-            cp coverage.xml /tmp/artifacts/coverage.xml
+            py.test --junitxml=tmp/junit.xml--cov-report xml --cov-config .coveragerc --cov ../
+            python-codacy-coverage -r coverage.xml
+
       - store_test_results:
-          path: /tmp/artifacts/coverage.xml
+          path: /tmp/artifacts/junit.xml
 
       - store_artifacts:
             path: /tmp/artifacts
