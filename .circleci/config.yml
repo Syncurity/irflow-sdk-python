@@ -4,7 +4,7 @@ version: 2
 
 jobs:
   build:
-    working_directory: ~/irflow_sdk_python
+    # working_directory: ~/irflow_sdk_python
     docker:
       - image: circleci/python:3.6.5
 
@@ -30,7 +30,6 @@ jobs:
           command: |
             source ../venv/bin/activate && \
             aws s3 cp s3://syncurity-ci/test_data.py . && \
-            cd ~/ && \
             mkdir ./test-reports && \
             pytest --junitxml=./test-reports/junit.xml --cov-report xml --cov-config .coveragerc --cov ../ && \
             python-codacy-coverage -r coverage.xml
