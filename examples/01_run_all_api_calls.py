@@ -268,6 +268,7 @@ else:
 
 
 def test_picklist_apis(found_picklist):
+    """Shows that we can add picklists"""
     picklist_id = found_picklist['id']
 
     # Get the Picklist the was just found
