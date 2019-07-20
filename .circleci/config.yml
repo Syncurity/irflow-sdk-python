@@ -33,10 +33,10 @@ jobs:
             mkdir test-reports && \
             pytest --junitxml=test-reports/junit.xml --cov-report xml --cov-config .coveragerc --cov ../ && \
             python-codacy-coverage -r coverage.xml
-            cp /home/circleci/project/tests/test-reports/junit.xml test-reports/junit.xml
+
 
       - store_test_results:
-          path: test-reports
+          path: tests/test-reports
 
       - store_artifacts:
-          path: test-reports
+          path: tests/test-reports
