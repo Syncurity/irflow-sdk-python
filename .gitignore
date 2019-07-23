@@ -128,3 +128,8 @@ Temporary Items
 .irflow_integrationsrc
 /.irf_integrations.rc
 
+# Coverage output
+.coverage
+tests/.coverage
+tests/coverage.xml
+

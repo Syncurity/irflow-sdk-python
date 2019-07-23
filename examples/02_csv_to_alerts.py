@@ -1,3 +1,5 @@
+"""Creates alerts from a csv"""
+
 import csv
 import irflow_client
 import pprint

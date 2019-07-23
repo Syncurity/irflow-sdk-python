@@ -1,8 +1,8 @@
 # -i https://pypi.org/simple
-certifi>=2018.10.15
+certifi>=2019.6.16
 chardet==3.0.4
 idna==2.7
 requests>=2.20.0,<3.0
-urllib3>=1.24.2,<1.25
+urllib3>=1.24.3,<1.25
 
 # bump version

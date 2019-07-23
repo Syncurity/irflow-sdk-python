@@ -3,10 +3,11 @@
 """
 from json import dumps
 import logging
-import requests
 import os
 import sys
 import tempfile
+
+import requests
 import urllib3
 from .__version__ import __version__
 
@@ -37,6 +38,7 @@ class IRFlowClient(object):
 
     """
     end_points = {
+        'assign_user_to_alert': '/api/v1/alerts/{0}/assign',
         'create_alert': 'api/v1/alerts',
         'get_alert': 'api/v1/alerts',
         'put_alert_close': 'api/v1/alerts/close',
@@ -64,7 +66,8 @@ class IRFlowClient(object):
     def __init__(self, config_args=None, config_file=None):
         """Create an API Client instance
 
-        Creates API Client to IR-Flow API. Default timeout is 5 seconds on connect and 30 seconds on response.
+        Creates API Client to IR-Flow API. Default timeout is 5 seconds on connect and
+        30 seconds on response.
 
         Args:
              config_args (dict): Key, Value pairs of IR-Flow API configuration options
@@ -75,9 +78,9 @@ class IRFlowClient(object):
         self.logger.addHandler(logging.NullHandler())
         # Make sure we have config info we need
         if not (config_args or config_file):
-            print('Missing config input parameters. Need either api.conf, or to pass in config_args to'
-                  'initialize IRFlowClient Class \n'
-                  )
+            print('Missing config input parameters. Need either api.conf, or to pass in '
+                  'config_args to initialize IRFlowClient Class \n')
+
         if config_args and config_file:
             print('!!! Warning !!! Since you provided both input args and an api.conf file, we are'
                   'defaulting to the input args.')
@@ -94,13 +97,14 @@ class IRFlowClient(object):
         self.session = requests.Session()
 
         # Set timeout on (connect, read) timeouts
-        self.session.timeout=(5, 30)
+        self.session.timeout = (5, 30)
         # Set the User-Agent
         self.session.headers.update({'User-Agent': IRFlowClient._build_user_agent()})
 
         # Set the X-Authorization header for all calls through the API
         # The rest of the headers are specified by the individual calls.
-        self.session.headers.update({'X-Authorization': "{} {}".format(self.api_user, self.api_key)})
+        self.session.headers.update({'X-Authorization': "{} {}"
+                                    .format(self.api_user, self.api_key)})
 
         if not self.circle_ci:
             self.version = self.get_version()
@@ -126,7 +130,8 @@ class IRFlowClient(object):
         """Helper function to dump request info to the debug stream on the logging bus
 
         Args:
-            heading (str): A string heading for the debug message - typically the name of the endpoint being queried
+            heading (str): A string heading for the debug message - typically the name of the
+                endpoint being queried
             url (str): The full url of the API endpoint
             headers (dict): The headers of this request, if desired
             data (dict): Key, Value pairs of data in the body of a request, if desired
@@ -145,10 +150,12 @@ class IRFlowClient(object):
         self.logger.debug(debug_string)
 
     def dump_response_debug_info(self, heading, status, json):
-        """Helper function to dump response info from a request to the debug stream on the logging bus
+        """Helper function to dump response info from a request to the debug stream
+            on the logging bus
 
         Args:
-            heading (str): A string heading for the debug message, the word 'Response' will be appended
+            heading (str): A string heading for the debug message, the word
+                'Response' will be appended
             status (int): The HTTP response code of the previously made request
             json (dict): The full json response body as returned by the IR-Flow API
         """
@@ -197,14 +204,48 @@ class IRFlowClient(object):
 
         return response.json()
 
+    def assign_user_to_alert(self, alert_num, username):
+        """ Assign a user to an Alert
+
+        Args:
+            alert_num (int): The IR-Flow Assigned Alert Number of the Alert to attach to the
+                specified incident
+            username(string): The IR-Flow User to assign to an alert
+
+        Returns:
+            dict: The full json response object returned by the IR-Flow API.
+
+        """
+
+        url = '{0}://{1}/{2}'.format(self.protocol, self.address,
+                                     self.end_points['assign_user_to_alert'])
+        url = url.format(alert_num)
+        headers = {'Content-type': 'application/json'}
+        payload = {'username': username}
+        if self.debug:
+            self.dump_request_debug_info('Assign User to Alert', url, headers=headers)
+
+        response = self.session.put(url, json=payload, headers=headers, verify=False)
+
+        if self.debug:
+            self.dump_response_debug_info('Assign User to Alert',
+                                          response.status_code, response.json())
+
+        return response.json()
+
     def attach_incident_to_alert(self, incident_num, alert_num):
         """Attach the specified alert to the specified incident
 
-        .. note:: This API endpoint will be deprecated in a future release. You should use :func:`attach_alert_to_incident`, which accomplishes the same outcome, and is how this would be done naturally in the interface. No new code should use this function.
+        .. note:: This API endpoint will be deprecated in a future release.
+            You should use :func:`attach_alert_to_incident`, which accomplishes the same outcome,
+            and is how this would be done naturally in the interface.
+            No new code should use this function.
 
         Args:
-            incident_num (int): The Incident Number of the Incident to which the specified alert should be attached
-            alert_num (int): The IR-Flow Assigned Alert Number of the Alert to attach to the specified incident
+            incident_num (int): The Incident Number of the Incident to which
+                the specified alert should be attached
+            alert_num (int): The IR-Flow Assigned Alert Number of the
+                Alert to attach to the specified incident
 
         Returns:
             dict: The full json response object returned by the IR-Flow API
@@ -219,7 +260,8 @@ class IRFlowClient(object):
         response = self.session.put(url, headers=headers, verify=False)
 
         if self.debug:
-            self.dump_response_debug_info('Attach Incident to Alert', response.status_code, response.json())
+            self.dump_response_debug_info('Attach Incident to Alert',
+                                          response.status_code, response.json())
 
         return response.json()
 
@@ -227,8 +269,8 @@ class IRFlowClient(object):
         """Upload an attachment to the specified alert
 
         Args:
-            alert_num (int): The IR-Flow Assigned Alert number of the Alert to which the desired filed should be
-                uploaded
+            alert_num (int): The IR-Flow Assigned Alert number of the
+                Alert to which the desired filed should be uploaded
             filename (str): The path to the file to be uploaded
 
         Returns:
@@ -245,7 +287,8 @@ class IRFlowClient(object):
         response = self.session.post(url, data={}, files=data, headers=headers, verify=False)
 
         if self.debug:
-            self.dump_response_debug_info('Upload Attachment to Alert', response.status_code, response.json())
+            self.dump_response_debug_info('Upload Attachment to Alert',
+                                          response.status_code, response.json())
 
         return response.json()
 
@@ -270,7 +313,8 @@ class IRFlowClient(object):
         response = self.session.post(url, data={}, files=data, headers=headers, verify=False)
 
         if self.debug:
-            self.dump_response_debug_info('Upload Attachment to Incident', response.status_code, response.json())
+            self.dump_response_debug_info('Upload Attachment to Incident',
+                                          response.status_code, response.json())
 
         return response.json()
 
@@ -295,7 +339,8 @@ class IRFlowClient(object):
         response = self.session.post(url, data={}, files=data, headers=headers, verify=False)
 
         if self.debug:
-            self.dump_response_debug_info('Upload Attachment to Alert Response', response.status_code, response.json())
+            self.dump_response_debug_info('Upload Attachment to Alert Response',
+                                          response.status_code, response.json())
 
         return response.json()
 
@@ -304,9 +349,8 @@ class IRFlowClient(object):
 
         Args:
             attachment_id (int): The ID of the attachment to be downloaded
-            attachment_output_file (str): The full path to the file on disk to which the desired attachment should be
-                saved
-
+            attachment_output_file (str): The full path to the file on disk
+                to which the desired attachment should be saved
         """
         url = '%s://%s/%s' % (self.protocol, self.address, self.end_points['get_attachment'])
         url = url % attachment_id
@@ -320,7 +364,8 @@ class IRFlowClient(object):
                 handle.write(block)
 
         if self.debug:
-            self.dump_response_debug_info('Download Attachment', response.status_code, {"response": response.status_code})
+            self.dump_response_debug_info('Download Attachment', response.status_code,
+                                          {"response": response.status_code})
 
         print('done')
 
@@ -350,7 +395,8 @@ class IRFlowClient(object):
         # Rewind the file to the beginning so we can read it into a string
         temp.seek(0)
         if self.debug:
-            self.dump_response_debug_info('Download Attachment String', response.status_code, response.json())
+            self.dump_response_debug_info('Download Attachment String',
+                                          response.status_code, response.json())
 
         return temp.read()
 
@@ -359,12 +405,14 @@ class IRFlowClient(object):
 
         Args:
             fact_group_id (int): The IR-Flow assigned ID of the fact_group to be updated
-            fact_data (dict): Key, Value pairs of fact fields as specified in IR-Flow and their values
+            fact_data (dict): Key, Value pairs of fact fields as specified
+                in IR-Flow and their values
 
         Returns:
             dict: The full json response object from the IR-Flow API
         """
-        url = '%s://%s/%s/%s' % (self.protocol, self.address, self.end_points['get_fact_group'], fact_group_id)
+        url = '%s://%s/%s/%s' % (self.protocol, self.address,
+                                 self.end_points['get_fact_group'], fact_group_id)
         headers = {
             'Content-type': 'application/json',
             'Accept': 'application/json'
@@ -389,7 +437,8 @@ class IRFlowClient(object):
         Returns:
             dict: The full json response object from the IR-Flow API
         """
-        url = '%s://%s/%s/%s' % (self.protocol, self.address, self.end_points['get_fact_group'], fact_group_id)
+        url = '%s://%s/%s/%s' % (self.protocol, self.address,
+                                 self.end_points['get_fact_group'], fact_group_id)
         headers = {
             'Content-type': 'application/json',
             'Accept': 'application/json'
@@ -413,7 +462,8 @@ class IRFlowClient(object):
         Returns:
             dict: The full json response object from the IR-Flow API
         """
-        url = '%s://%s/%s/%s' % (self.protocol, self.address, self.end_points['get_alert'], alert_num)
+        url = '%s://%s/%s/%s' % (self.protocol, self.address,
+                                 self.end_points['get_alert'], alert_num)
         headers = {
             'Content-type': 'application/json',
             'Accept': 'application/json'
@@ -435,10 +485,10 @@ class IRFlowClient(object):
         Args:
             alert_fields (dict): Key, Value pairs of fields configured in IR-Flow and their values
             description (str): An optional string description for the alert
-            incoming_field_group_name (str): The string name of the incoming field group name for this alert as
-                specified in IR-Flow
-            suppress_missing_field_warning (bool): Suppress the API warnings indicating missing fields if `True` -
-                defaults to `False`
+            incoming_field_group_name (str): The string name of the incoming
+                field group name for this alert as specified in IR-Flow
+            suppress_missing_field_warning (bool): Suppress the API warnings indicating
+                missing fields if `True` - defaults to `False`
 
         Returns:
             dict: The full json response object from the IR-Flow API
@@ -467,14 +517,18 @@ class IRFlowClient(object):
 
         return response.json()
 
-    def create_incident(self, incident_fields, incident_type_name, incident_subtype_name=None, description=None):
-        """Create an incident of the desired type and subtype with the specified fields and description
+    def create_incident(self, incident_type_name, incident_fields=None,
+                        incident_subtype_name=None, description=None):
+        """Create an incident of the desired type and subtype with the specified fields
+            and description
 
         Args:
-            incident_fields (dict): Key, Value pairs of fields configured in IR-Flow and their values
-            incident_type_name (str): The string name of the incident type with which this incident should be created
-            incident_subtype_name (str): The string name of the incident subtype with which this incident should be
-                created (optional)
+            incident_type_name (str): The string name of the incident type with which this
+                incident should be created
+            incident_subtype_name (str): The string name of the incident subtype with which
+                this incident should be created (optional)
+            incident_fields (dict): Key, Value pairs of fields configured in IR-Flow and
+                their values (optional)
             description (str): An optional string description for the incident
         """
         url = '%s://%s/%s' % (self.protocol, self.address, self.end_points['create_incident'])
@@ -527,17 +581,20 @@ class IRFlowClient(object):
 
         return response.json()
 
-    def update_incident(self, incident_num, incident_fields, incident_type_name, owner_id, group_ids, incident_subtype_name=None,
-                        description=None):
-        """Update the incident of the provided number, type, and subtype with the provided fields and description
+    def update_incident(self, incident_num, incident_fields, incident_type_name,
+                        owner_id, group_ids, incident_subtype_name=None, description=None):
+        """Update the incident of the provided number, type, and subtype with the provided
+            fields and description
 
         Args:
             incident_num (int): The IR-Flow assigned ID of the incident to update
-            incident_fields (dict): Key, Value pairs of fields configured in IR-Flow and their values
+            incident_fields (dict): Key, Value pairs of fields configured in IR-Flow
+                and their values
             incident_type_name (str): The string name of the incident type of the desired incident
             owner_id (int): The id of the user that will own this incident
             group_ids (list of int): The ids of the groups this incident will belong to.
-            incident_subtype_name (str): The string name of the incident subtype of the desired incident (optional)
+            incident_subtype_name (str): The string name of the incident subtype of the desired
+                incident (optional)
             description (str): An optional string description for the incident
 
         Returns:
@@ -575,8 +632,10 @@ class IRFlowClient(object):
         """Attach the specified alert to the specified incident
 
         Args:
-            incident_num (int): The Incident Number of the Incident to which the specified alert should be attached
-            alert_num (int): The IR-Flow Assigned Alert Number of the Alert to attach to the specified incident
+            incident_num (int): The Incident Number of the Incident to which the specified
+                alert should be attached
+            alert_num (int): The IR-Flow Assigned Alert Number of the Alert to attach to the
+                specified incident
 
         Returns:
             dict: The full json response object returned by the IR-Flow API
@@ -591,7 +650,8 @@ class IRFlowClient(object):
         response = self.session.put(url, headers=headers, verify=False)
 
         if self.debug:
-            self.dump_response_debug_info('Attach Alert to Incident', response.status_code, response.json())
+            self.dump_response_debug_info('Attach Alert to Incident',
+                                          response.status_code, response.json())
 
         return response.json()
 
@@ -615,12 +675,14 @@ class IRFlowClient(object):
             'Accept': 'application/json'
         }
         if self.debug:
-            self.dump_request_debug_info('Get List of Picklists', url, headers=headers, params=params)
+            self.dump_request_debug_info('Get List of Picklists', url, headers=headers,
+                                         params=params)
 
         response = self.session.get(url, params=params, verify=False, headers=headers)
 
         if self.debug:
-            self.dump_response_debug_info('Get List of Picklists', response.status_code, response.json())
+            self.dump_response_debug_info('Get List of Picklists',
+                                          response.status_code, response.json())
 
         return response.json()
 
@@ -650,11 +712,14 @@ class IRFlowClient(object):
         return response.json()
 
     def add_item_to_picklist(self, picklist_id, value, label, description=None):
-        """Add an item with the provided value, label, and description to the picklist matching the provided ID
+        """Add an item with the provided value, label, and description to the picklist
+            matching the provided ID
 
         Args:
-            picklist_id (int): The IR-Flow assigned ID of the picklist to which the new item should be added
-            value (str): The string value submitted to actions and integrations for this picklist item
+            picklist_id (int): The IR-Flow assigned ID of the picklist to which the new item
+                should be added
+            value (str): The string value submitted to actions and integrations for this
+                picklist item
             label (str): The label to be displayed for this picklist item
             description (str): An optional description for this picklist item
 
@@ -676,12 +741,14 @@ class IRFlowClient(object):
             params['description'] = description
 
         if self.debug:
-            self.dump_request_debug_info('Add Item to Picklist', url, headers=headers, params=params)
+            self.dump_request_debug_info('Add Item to Picklist', url, headers=headers,
+                                         params=params)
 
         response = self.session.post(url, json=params, verify=False, headers=headers)
 
         if self.debug:
-            self.dump_response_debug_info('Add Item to Picklist', response.status_code, response.json())
+            self.dump_response_debug_info('Add Item to Picklist', response.status_code,
+                                          response.json())
 
         return response.json()
 
@@ -696,7 +763,8 @@ class IRFlowClient(object):
         Returns:
             dict: The full json response object from the IR-Flow API
         """
-        url = '%s://%s/%s' % (self.protocol, self.address, self.end_points['get_picklist_item_list'])
+        url = '%s://%s/%s' % (self.protocol, self.address,
+                              self.end_points['get_picklist_item_list'])
         params = {
             'picklist_id': picklist_id,
             'with_trashed': with_trashed,
@@ -707,12 +775,14 @@ class IRFlowClient(object):
             'Accept': 'application/json'
         }
         if self.debug:
-            self.dump_request_debug_info('Get List of Picklist Items', url, headers=headers, params=params)
+            self.dump_request_debug_info('Get List of Picklist Items', url, headers=headers,
+                                         params=params)
 
         response = self.session.get(url, params=params, verify=False, headers=headers)
 
         if self.debug:
-            self.dump_response_debug_info('Get List of Picklist Items', response.status_code, response.json())
+            self.dump_response_debug_info('Get List of Picklist Items', response.status_code,
+                                          response.json())
 
         return response.json()
 
@@ -720,8 +790,10 @@ class IRFlowClient(object):
         """Create a new item in a specified picklist
 
         Args:
-            picklist_id (int): The IR-Flow assigned ID of the picklist to which the new item should be added
-            value (str): The string value submitted to actions and integrations for this picklist item
+            picklist_id (int): The IR-Flow assigned ID of the picklist to which the new item
+                should be added
+            value (str): The string value submitted to actions and integrations for this
+                picklist item
             label (str): The label to be displayed for this picklist item
             description (str): An optional description for this picklist item
 
@@ -748,7 +820,8 @@ class IRFlowClient(object):
         response = self.session.post(url, json=params, verify=False, headers=headers)
 
         if self.debug:
-            self.dump_response_debug_info('Add PIcklist Item', response.status_code, response.json())
+            self.dump_response_debug_info('Add PIcklist Item', response.status_code,
+                                          response.json())
 
         return response.json()
 
@@ -773,7 +846,8 @@ class IRFlowClient(object):
         response = self.session.get(url, verify=False, headers=headers)
 
         if self.debug:
-            self.dump_response_debug_info('Get Picklist Item', response.status_code, response.json())
+            self.dump_response_debug_info('Get Picklist Item', response.status_code,
+                                          response.json())
 
         return response.json()
 
@@ -798,7 +872,8 @@ class IRFlowClient(object):
         response = self.session.put(url, verify=False, headers=headers)
 
         if self.debug:
-            self.dump_response_debug_info('Restore Picklist Item', response.status_code, response.json())
+            self.dump_response_debug_info('Restore Picklist Item', response.status_code,
+                                          response.json())
 
         return response.json()
 
@@ -823,7 +898,8 @@ class IRFlowClient(object):
         response = self.session.delete(url, verify=False, headers=headers)
 
         if self.debug:
-            self.dump_response_debug_info('Delete Picklist Item', response.status_code, response.json())
+            self.dump_response_debug_info('Delete Picklist Item', response.status_code,
+                                          response.json())
 
         return response.json()
 
@@ -833,9 +909,10 @@ class IRFlowClient(object):
         Args:
             type_name (str): The string name for this object type
             type_label (str): The label for this object type
-            parent_type_name (str): The string name of the parent object type - required if no `parent_type_id` is
-                specified
-            parent_type_id (int): The id of the parent object type - required if no `parent_type_name` is specified
+            parent_type_name (str): The string name of the parent object type -
+                required if no `parent_type_id` is specified
+            parent_type_id (int): The id of the parent object type - required if no
+                `parent_type_name` is specified
 
         Returns:
             dict: The full json response object from the IR-Flow API
@@ -866,27 +943,30 @@ class IRFlowClient(object):
         response = self.session.post(url, json=params, verify=False, headers=headers)
 
         if self.debug:
-            self.dump_response_debug_info('Store Object Type', response.status_code, response.json())
+            self.dump_response_debug_info('Store Object Type', response.status_code,
+                                          response.json())
 
         return response.json()
 
-    def attach_field_to_object_type(self, object_type_name, field_name, object_type_id=None, field_id=None):
+    def attach_field_to_object_type(self, object_type_name, field_name,
+                                    object_type_id=None, field_id=None):
         """Attach an existing field to an object of the specified name or id
 
         Args:
-            object_type_name (str): The string name of the object to which the specified field should be added -
-                required only if no `object_type_id` is provided
-            field_name (str): The string name of the field to be added to the specified object - required only if no
-                `field_id` is provided
-            object_type_id (int): The IR-Flow assigned ID of the object to which the specified field should be added -
-                required only if no `object_type_name` is provided
-            field_id (int): The IR-Flow assigned IF of the field to be added to the specified object - required only if
-                no `field_name` is provided
+            object_type_name (str): The string name of the object to which the specified field
+                should be added - required only if no `object_type_id` is provided
+            field_name (str): The string name of the field to be added to the specified object -
+                required only if no `field_id` is provided
+            object_type_id (int): The IR-Flow assigned ID of the object to which the specified field
+                should be added - required only if no `object_type_name` is provided
+            field_id (int): The IR-Flow assigned IF of the field to be added to the specified object
+                - required only if no `field_name` is provided
 
         Returns:
             dict: The full json response object from the IR-Flow API
         """
-        url = '%s://%s/%s/%s' % (self.protocol, self.address, self.end_points['object_type'], 'attach_field')
+        url = '%s://%s/%s/%s' % (self.protocol, self.address,
+                                 self.end_points['object_type'], 'attach_field')
         headers = {
             'Content-type': 'application/json',
             'Accept': 'application/json'
@@ -899,12 +979,14 @@ class IRFlowClient(object):
         }
 
         if self.debug:
-            self.dump_request_debug_info('Attach Field to Object Type', url, headers=headers, params=params)
+            self.dump_request_debug_info('Attach Field to Object Type', url, headers=headers,
+                                         params=params)
 
         response = self.session.put(url, json=params, verify=False, headers=headers)
 
         if self.debug:
-            self.dump_response_debug_info('Attach Field to Object Type', response.status_code, response.json())
+            self.dump_response_debug_info('Attach Field to Object Type', response.status_code,
+                                          response.json())
 
         return response.json()
 
@@ -933,7 +1015,8 @@ class IRFlowClient(object):
             str: user-agent
         """
 
-        return "IR-Flow-Client / {0} (Python {1}; en-us)".format(__version__, sys.version.split(' ')[0])
+        return "IR-Flow-Client / {0} (Python {1}; en-us)".format(__version__,
+                                                                 sys.version.split(' ')[0])
 
     def _get_config_args_params(self, config_args):
         """Helper function to check/parse configuration arguments provided as a dict
@@ -977,6 +1060,7 @@ class IRFlowClient(object):
             self.protocol = config_args['protocol']
         else:
             self.protocol = 'https'
+
         if config_args['debug']:
             self.debug = config_args['debug']
         else:
@@ -1003,28 +1087,29 @@ class IRFlowClient(object):
 
         # Make sure the Config File has the IRFlowAPI Section
         if not config.has_section('IRFlowAPI'):
-            self.logger.error('Config file "{}" does not have the required section "[IRFlowAPI]"'.format(config_file))
-            raise IRFlowClientConfigError('Config file "{}" does not have the required section "[IRFlowAPI]"'
-                                          .format(config_file))
+            self.logger.error('Config file "{}" does not have the required section "[IRFlowAPI]"'
+                              .format(config_file))
+            raise IRFlowClientConfigError('Config file "{}" does not have the required section '
+                                          '"[IRFlowAPI]"'.format(config_file))
 
         missing_options = []
         # Check for missing required configuration keys
         if not config.has_option('IRFlowAPI', 'address'):
             self.logger.error(
-                    'Configuration File "{}" does not contain the "address" option in the [IRFlowAPI] '
-                    'section'.format(config_file)
+                    'Configuration File "{}" does not contain the "address" option '
+                    'in the [IRFlowAPI] section'.format(config_file)
             )
             missing_options.append('address')
         if not config.has_option('IRFlowAPI', 'api_user'):
             self.logger.error(
-                    'Configuration File "{}" does not contain the "api_user" option in the [IRFlowAPI] '
-                    'section'.format(config_file)
+                    'Configuration File "{}" does not contain the "api_user" option '
+                    'in the [IRFlowAPI] section'.format(config_file)
             )
             missing_options.append('api_user')
         if not config.has_option('IRFlowAPI', 'api_key'):
             self.logger.error(
-                    'Configuration File "{}" does not contain the "api_key" option in the [IRFlowAPI] '
-                    'section'.format(config_file)
+                    'Configuration File "{}" does not contain the "api_key" option '
+                    'in the [IRFlowAPI] section'.format(config_file)
             )
             missing_options.append('api_key')
 
@@ -1033,8 +1118,10 @@ class IRFlowClient(object):
 
         # If the required keys do not exist, then simply exit
         if len(missing_options) > 0:
-            self.logger.error('Missing configuration sections: {0}'.format(", ".join(missing_options)))
-            raise IRFlowClientConfigError('Missing configuration sections: {0}'.format(", ".join(missing_options)))
+            self.logger.error('Missing configuration sections: {0}'
+                              .format(", ".join(missing_options)))
+            raise IRFlowClientConfigError('Missing configuration sections: {0}'
+                                          .format(", ".join(missing_options)))
 
         # Now set the configuration values on the self object.
         self.address = config.get('IRFlowAPI', 'address')
