@@ -253,7 +253,7 @@ incident_fields = {'time_remediated': datetime.datetime.now().strftime("%Y-%m-%d
 description = 'Super Bad API Incident - Remediated'  # The Alert Description
 
 owner_id = 2
-group_ids = [1, 2,  3]
+group_ids = [1, 2, 3]
 
 # Call the irflow_api method to update an Incident. NOTE: irflowAPI is the object we created from
 # the irflow_client.  This is how all methods are called. The call returns a json data structure
