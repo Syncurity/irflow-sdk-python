@@ -51,6 +51,7 @@ def get_fact_data(fg_id):
         return fact_data1['data']['fact_group']['facts']  # List of the facts
     else:
         print("Get Fact Group: Failed")
+        return None
 
 
 print('=========== Get IR-Flow Version =========')
