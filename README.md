@@ -1,5 +1,5 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![PyPI3](https://img.shields.io/badge/pypi-1.6.11-blue.svg)](https://pypi.org/project/irflow-client/)
+[![PyPI3](https://img.shields.io/badge/pypi-1.6.0-blue.svg)](https://pypi.org/project/irflow-client/)
 [![Documentation Status](https://readthedocs.com/projects/syncurity-irflow-sdk-python/badge/?version=latest)](https://syncurity-irflow-sdk-python.readthedocs-hosted.com/en/latest/?badge=latest)
 ![PyPI1](https://img.shields.io/badge/python-2.7+-brightgreen.svg)
 ![PyPI2](https://img.shields.io/badge/python-3.6+-brightgreen.svg)
