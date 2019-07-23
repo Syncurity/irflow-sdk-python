@@ -1,7 +1,5 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![PyPI3](https://img.shields.io/badge/pypi-1.6.0-blue.svg)](https://pypi.org/project/irflow-client/)
-[![Documentation Status](https://readthedocs.com/projects/syncurity-irflow-sdk-python/badge/?version=latest)](https://syncurity-irflow-sdk-python.readthedocs-hosted.com/en/latest/?badge=latest)
-![PyPI1](https://img.shields.io/badge/python-2.7+-brightgreen.svg)
+[![PyPI version](https://badge.fury.io/py/irflow-client.svg)](https://badge.fury.io/py/irflow-client)![PyPI1](https://img.shields.io/badge/python-2.7+-brightgreen.svg)
 ![PyPI2](https://img.shields.io/badge/python-3.6+-brightgreen.svg)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/47bf392599fb4d27931d4d1225e37835)](https://www.codacy.com?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Syncurity/irflow-sdk-python&amp;utm_campaign=Badge_Grade)
 [![Codacy Badge](https://api.codacy.com/project/badge/Coverage/47bf392599fb4d27931d4d1225e37835)](https://www.codacy.com?utm_source=github.com&utm_medium=referral&utm_content=Syncurity/irflow-sdk-python&utm_campaign=Badge_Coverage)
@@ -9,7 +7,7 @@
 
 # irflow-sdk-python
 
-## A python client for Syncurity IR-Flow REST API
+## logger.info: A python client for Syncurity IR-Flow REST API
 Python2 support will be removed at the beginning of January 2020.
 
 ### Documentation
@@ -19,27 +17,35 @@ View our documentation [here](https://syncurity-irflow-sdk-python.readthedocs-ho
 See the API functions [here](https://syncurity-irflow-sdk-python.readthedocs-hosted.com/en/latest/class.html#class)
 
 ### Installation To Use in Production
-Python2: `pip install irflow_client`
-Python3: `pip3 install irflow_client`
+`pip install irflow_client`
 
-### Installation in Edit Mode for Development
-Python2: `pip install -e .`
-Python3: `pip3 install -e .`
 
 ### Upgrade
-Python2: `pip install irflow_client --upgrade`
-Python3: `pip3 install irflow_client --upgrade`
+`pip install irflow_client --upgrade`
+
 
 ### Build from source / install extra packages
 Clone the repo:
 ` git clone git@github.com:Syncurity/irflow-sdk-python.git`  
 
-For building docs locally:
-
-    - use edit mode
 
 For running tests: (not implemented yet)
-`sudo pip install irflow_client -e . tests`
+1. Clone the repo:
+
+` git clone git@github.com:Syncurity/irflow-sdk-python.git` 
+
+2. Install all requirements:
+
+```bash
+cd <project directory>
+pip install .
+pip install -r requirements-dev.txt
+pytest
+
+# With Coverage
+cd tests
+py.test --cov-report xml --cov-config .coveragerc --cov ../
+```
 
 ### Contribute
 Pull requests are always appreciated
