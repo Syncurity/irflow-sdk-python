@@ -37,6 +37,7 @@ class IRFlowClient(object):
 
     """
     end_points = {
+        'assign_user_to_alert': '/api/v1/alerts/{0}/assign',
         'create_alert': 'api/v1/alerts',
         'get_alert': 'api/v1/alerts',
         'put_alert_close': 'api/v1/alerts/close',
@@ -75,9 +76,9 @@ class IRFlowClient(object):
         self.logger.addHandler(logging.NullHandler())
         # Make sure we have config info we need
         if not (config_args or config_file):
-            print('Missing config input parameters. Need either api.conf, or to pass in config_args to'
-                  'initialize IRFlowClient Class \n'
-                  )
+            print('Missing config input parameters. Need either api.conf, or to pass in '
+                  'config_args to initialize IRFlowClient Class \n')
+
         if config_args and config_file:
             print('!!! Warning !!! Since you provided both input args and an api.conf file, we are'
                   'defaulting to the input args.')
@@ -194,6 +195,34 @@ class IRFlowClient(object):
 
         if self.debug:
             self.dump_response_debug_info('Close Alert', response.status_code, response.json())
+
+        return response.json()
+
+    def assign_user_to_alert(self, alert_num, username):
+        """ Assign a user to an Alert
+
+        Args:
+            alert_num (int): The IR-Flow Assigned Alert Number of the Alert to attach to the
+            specified incident
+            username(string): The IR-Flow User to assign to an alert
+
+        Returns:
+            dict: The full json response object returned by the IR-Flow API.
+
+        """
+
+        url = '{0}://{1}/{2}'.format(self.protocol, self.address,
+                                     self.end_points['assign_user_to_alert'])
+        url = url.format(alert_num)
+        headers = {'Content-type': 'application/json'}
+        payload = {'username': username}
+        if self.debug:
+            self.dump_request_debug_info('Assign User to Alert', url, headers=headers)
+
+        response = self.session.put(url, json=payload, headers=headers, verify=False)
+
+        if self.debug:
+            self.dump_response_debug_info('Assign User to Alert', response.status_code, response.json())
 
         return response.json()
 
@@ -978,6 +1007,7 @@ class IRFlowClient(object):
             self.protocol = config_args['protocol']
         else:
             self.protocol = 'https'
+
         if config_args['debug']:
             self.debug = config_args['debug']
         else:

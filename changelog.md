@@ -41,3 +41,5 @@ irflow-sdk-python changelog
 * v1.5.9 Update URLLib for https://nvd.nist.gov/vuln/detail/CVE-2019-11324
 * v1.5.10 Fix py2 compatibility
 * v1.5.11 Fixed Create Incident to not require incident fields
+* v1.6.0 Added the Assign User to Alert Endpoint
+    * Python2 support will be deprecated at the end of 2019
