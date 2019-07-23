@@ -7,8 +7,9 @@
 
 # irflow-sdk-python
 
-## logger.info: A python client for Syncurity IR-Flow REST API
-Python2 support will be removed at the beginning of January 2020.
+## A python client for Syncurity IR-Flow REST API
+
+logger.info: Python2 support will be removed at the beginning of January 2020.
 
 ### Documentation
 View our documentation [here](https://syncurity-irflow-sdk-python.readthedocs-hosted.com/en/latest/)
@@ -29,19 +30,22 @@ Clone the repo:
 ` git clone git@github.com:Syncurity/irflow-sdk-python.git`  
 
 
-For running tests: (not implemented yet)
+For running tests:
+```bash
 1. Clone the repo:
 
-` git clone git@github.com:Syncurity/irflow-sdk-python.git` 
+git clone git@github.com:Syncurity/irflow-sdk-python.git 
 
 2. Install all requirements:
 
-```bash
 cd <project directory>
 pip install .
 pip install -r requirements-dev.txt
+
+3. Run tests
 pytest
 
+4. Run tests with coverage
 # With Coverage
 cd tests
 py.test --cov-report xml --cov-config .coveragerc --cov ../
