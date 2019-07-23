@@ -43,3 +43,5 @@ irflow-sdk-python changelog
 * v1.5.11 Fixed Create Incident to not require incident fields
 * v1.6.0 Added the Assign User to Alert Endpoint
     * Python2 support will be deprecated at the end of 2019
+    * Bump certifi to 2019.6.16
+    * Bump urllib3>=1.24.3 (CVE-2019-9740)
