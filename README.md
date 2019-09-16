@@ -1,6 +1,5 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![PyPI version](https://badge.fury.io/py/irflow-client.svg)](https://badge.fury.io/py/irflow-client)![PyPI1](https://img.shields.io/badge/python-2.7+-brightgreen.svg)
-![PyPI2](https://img.shields.io/badge/python-3.6+-brightgreen.svg)
+[![PyPI version](https://badge.fury.io/py/irflow-client.svg)](https://badge.fury.io/py/irflow-client)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/47bf392599fb4d27931d4d1225e37835)](https://www.codacy.com?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Syncurity/irflow-sdk-python&amp;utm_campaign=Badge_Grade)
 [![Codacy Badge](https://api.codacy.com/project/badge/Coverage/47bf392599fb4d27931d4d1225e37835)](https://www.codacy.com?utm_source=github.com&utm_medium=referral&utm_content=Syncurity/irflow-sdk-python&utm_campaign=Badge_Coverage)
 [![CircleCI](https://circleci.com/gh/Syncurity/irflow-sdk-python.svg?style=svg&circle-token=19e583ed7083a852759e89dfac9e744a2d854088)](https://circleci.com/gh/Syncurity/irflow-sdk-python)
