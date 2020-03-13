@@ -45,4 +45,5 @@ irflow-sdk-python changelog
     * Python2 support will be deprecated at the end of 2019
     * Bump certifi to 2019.6.16
     * Bump urllib3>=1.24.3 (CVE-2019-9740)
-* v1.6.1 Added priority_id and owner_id parameters to create_incident and update_incident calls
+* v1.6.1 Bump bleach version to patch moderate severity XSS issues: https://github.com/Syncurity/irflow-sdk-python/pull/84
+* v1.6.2 Added priority_id and owner_id parameters to create_incident and update_incident calls
