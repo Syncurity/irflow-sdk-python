@@ -518,7 +518,8 @@ class IRFlowClient(object):
         return response.json()
 
     def create_incident(self, incident_type_name, incident_fields=None,
-                        incident_subtype_name=None, description=None):
+                        incident_subtype_name=None, description=None,
+                        priority_id=None, owner_id=None):
         """Create an incident of the desired type and subtype with the specified fields
             and description
 
@@ -530,6 +531,8 @@ class IRFlowClient(object):
             incident_fields (dict): Key, Value pairs of fields configured in IR-Flow and
                 their values (optional)
             description (str): An optional string description for the incident
+            priority_id (str): ID of the priority to set
+            owner_id (str): ID of the user to set incident owner to
         """
         url = '%s://%s/%s' % (self.protocol, self.address, self.end_points['create_incident'])
         params = {
@@ -545,6 +548,10 @@ class IRFlowClient(object):
             params['incident_subtype_name'] = incident_subtype_name
         if description is not None:
             params['description'] = description
+        if priority_id is not None:
+            params['priority_id'] = priority_id
+        if owner_id is not None:
+            params['owner_id'] = owner_id
 
         if self.debug:
             self.dump_request_debug_info('Create Incident', url, headers=headers, params=params)
@@ -582,7 +589,7 @@ class IRFlowClient(object):
         return response.json()
 
     def update_incident(self, incident_num, incident_fields, incident_type_name,
-                        owner_id, group_ids, incident_subtype_name=None, description=None):
+                        owner_id, group_ids, incident_subtype_name=None, description=None, priority_id=None):
         """Update the incident of the provided number, type, and subtype with the provided
             fields and description
 
@@ -617,6 +624,8 @@ class IRFlowClient(object):
             params['incident_subtype_name'] = incident_subtype_name
         if description is not None:
             params['description'] = description
+        if priority_id is not None:
+            params['priority_id'] = priority_id
 
         if self.debug:
             self.dump_request_debug_info('Update Incident', url, headers=headers, params=params)

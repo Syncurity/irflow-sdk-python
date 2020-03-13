@@ -1,7 +1,7 @@
 irflow-sdk-python changelog
 
 * v1.0.5 -  Initial Release  
-* v1.0.6 -  Add option to pass in config_args in addition to specifiying a path to api.conf 
+* v1.0.6 -  Add option to pass in config_args in addition to specifiying a path to api.conf
 * v1.0.7 -  Parenthesis and helper text fix
 * v1.1.1 -  Added support for IR-Flow 4.1 (api changes), Python 3 compatibility
 * v1.1.2 -  Fixed module import to work better dynamically
@@ -13,8 +13,8 @@ irflow-sdk-python changelog
 * v1.1.10 - Fix MANIFEST.in
 * v1.1.12 - Fix method attach_alert_to_incident (was the inverse)
 * v1.2.0
-    * Add docstrings to irflow_client for RTD build 
-    * Bump version to align with IR-Flow Version. 
+    * Add docstrings to irflow_client for RTD build
+    * Bump version to align with IR-Flow Version.
     * Added get_version endpoint
     * added requirements.txt freeze,
     * created readthedocs site
@@ -30,7 +30,7 @@ irflow-sdk-python changelog
 * v1.5.4 remove sys.exit()
     * Fix CI workflow
     * detect http 503 (IR-Flow Offline)
-    * fix debug logging 
+    * fix debug logging
     * Fix update_incident function to added owner and group IDs
     * Converted to Apache 2.0 license
 * v1.5.5 Test build
@@ -46,3 +46,4 @@ irflow-sdk-python changelog
     * Bump certifi to 2019.6.16
     * Bump urllib3>=1.24.3 (CVE-2019-9740)
 * v1.6.1 Bump bleach version to patch moderate severity XSS issues: https://github.com/Syncurity/irflow-sdk-python/pull/84
+* v1.6.2 Added priority_id and owner_id parameters to create_incident and update_incident calls
