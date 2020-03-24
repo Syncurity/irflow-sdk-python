@@ -47,3 +47,4 @@ irflow-sdk-python changelog
     * Bump urllib3>=1.24.3 (CVE-2019-9740)
 * v1.6.1 Bump bleach version to patch moderate severity XSS issues: https://github.com/Syncurity/irflow-sdk-python/pull/84
 * v1.6.2 Added priority_id and owner_id parameters to create_incident and update_incident calls
+* v1.6.3 Update bleach dependency (https://github.com/advisories/GHSA-m6xf-fq7q-8743)
