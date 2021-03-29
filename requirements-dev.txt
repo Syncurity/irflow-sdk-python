@@ -20,7 +20,7 @@ ply==3.11
 pockets==0.7.2
 py==1.7.0
 pycparser==2.19
-pygments==2.2.0
+pygments==2.7.4
 pypandoc==1.4
 pytest-cov==2.6.0
 pytest==3.9.2
